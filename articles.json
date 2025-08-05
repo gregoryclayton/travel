@@ -1,0 +1,15 @@
+[
+  {
+    "id": 1,
+    "title": "Exploring the Amalfi Coast",
+    "date": "2025-06-01",
+    "author": "Maria Romano",
+    "authorAvatar": "https://randomuser.me/api/portraits/women/65.jpg",
+    "excerpt": "Sunshine, cliffs, and lemon groves: see how the Amalfi Coast stole our hearts.",
+    "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=500&q=80",
+    "category": "guides",
+    "tags": ["Europe", "Italy", "Scenic", "Culture"],
+    "contentMarkdown": "# Introduction\nThe Amalfi Coast is beautiful...\n"
+  },
+  ...
+]

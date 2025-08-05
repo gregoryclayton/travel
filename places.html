@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TRAVELHACKS | Top Destinations</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background:#f7f7fa; color:#222; }
+    header { background:#2b3a4b; color:#fff; padding:1.2em 1em; position:relative; height:50px;}
+    .logo { font-size:2em; font-weight:bold; letter-spacing:2px; }
+    nav { position:absolute; right:1em; top:1.5em; }
+    .dropdown { display:inline-block; position:relative; }
+    .dropbtn {
+      background:#2b3a4b; color:#fff;  font-size:1.2em;
+      border:none; cursor:pointer; border-radius:6px;
+    }
+    .dropdown-content {
+      display:none; position:absolute; background:#fff; min-width:140px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.08); z-index:1;
+      border-radius:6px; right:0; margin-top:0.1em;
+    }
+    .dropdown-content a {
+      color:#2b3a4b; padding:0.8em 1.2em; text-decoration:none; display:block;
+      font-size:1em; border-bottom:1px solid #eee;
+    }
+    .dropdown-content a:last-child { border-bottom:none; }
+    .dropdown-content a:hover { background:#f9f9fb; }
+    .dropdown:hover .dropdown-content { display:block; }
+    main { max-width:1200px; margin:2em auto; padding:0 1em; }
+    
+    /* Page title */
+    .page-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5em;
+      padding-bottom: 0.8em;
+      border-bottom: 1px solid #e0e4e8;
+    }
+    
+    .page-title h1 {
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #2b3a4b;
+      margin: 0;
+    }
+    
+    .page-description {
+      color: #789;
+      margin-top: 0.3em;
+      font-size: 0.95em;
+    }
+    
+    /* Top Destinations Section Styles */
+    .top-destinations-section {
+      margin: 1em 0 2em 0;
+    }
+    
+    .top-destinations-controls {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1em;
+      margin-bottom: 1.5em;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.2em 1.5em;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+    }
+    
+    .destinations-sort-label {
+      font-size: 0.9em;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    .destinations-sort-select {
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #f8f9fa;
+      font-size: 0.9em;
+      color: #444;
+      min-width: 120px;
+    }
+    
+    .top-destinations-filter {
+      display: flex;
+      gap: 1em;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    
+    .filter-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    
+    .top-destinations-last-updated {
+      font-size: 0.85em;
+      color: #789;
+    }
+    
+    .top-destinations-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5em;
+      margin-bottom: 1em;
+    }
+    
+    .destination-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(44,62,80,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+    
+    .destination-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(44,62,80,0.15);
+    }
+    
+    .destination-rank {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255,255,255,0.85);
+      color: #2b3a4b;
+      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+    
+    .destination-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .destination-content {
+      padding: 1.2em;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .destination-name {
+      font-size: 1.2em;
+      font-weight: 600;
+      margin: 0 0 0.4em 0;
+      color: #2b3a4b;
+    }
+    
+    .destination-location {
+      font-size: 0.9em;
+      color: #789;
+      margin-bottom: 0.8em;
+    }
+    
+    .destination-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8em;
+    }
+    
+    .rating-stars {
+      color: #ffb100;
+      font-size: 1.1em;
+      letter-spacing: 1px;
+      margin-right: 0.5em;
+    }
+    
+    .rating-score {
+      font-weight: 600;
+      font-size: 1.1em;
+      color: #2b3a4b;
+    }
+    
+    .rating-count {
+      font-size: 0.85em;
+      color: #789;
+      margin-left: 0.5em;
+    }
+    
+    .destination-description {
+      color: #444;
+      font-size: 0.95em;
+      margin-bottom: 1em;
+      flex-grow: 1;
+    }
+    
+    .destination-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4em;
+      margin-bottom: 0.8em;
+    }
+    
+    .destination-tag {
+      background: #f0f2f5;
+      color: #555;
+      padding: 0.3em 0.6em;
+      border-radius: 4px;
+      font-size: 0.8em;
+    }
+    
+    .destination-sources {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .destination-source-logos {
+      display: flex;
+      gap: 0.5em;
+    }
+    
+    .source-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7em;
+      color: #555;
+      border: 1px solid #eee;
+    }
+    
+    .destination-more {
+      color: #2962ff;
+      text-decoration: none;
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+    
+    .destinations-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9em;
+      color: #789;
+      margin-top: 1em;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1em 1.5em;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+    }
+    
+    .destinations-api-credit {
+      font-style: italic;
+    }
+    
+    .destinations-view-all {
+      color: #2962ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    /* Regional sections */
+    .regions-container {
+      margin-top: 3em;
+    }
+    
+    .region-title {
+      font-size: 1.4em;
+      color: #2b3a4b;
+      margin-bottom: 1em;
+      padding-bottom: 0.5em;
+      border-bottom: 1px solid #e0e4e8;
+    }
+    
+    .region-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.2em;
+      margin-bottom: 2.5em;
+    }
+    
+    .region-card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+      transition: transform 0.2s;
+    }
+    
+    .region-card:hover {
+      transform: translateY(-5px);
+    }
+    
+    .region-image {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+    }
+    
+    .region-content {
+      padding: 1em;
+      text-align: center;
+    }
+    
+    .region-name {
+      font-weight: 600;
+      color: #2b3a4b;
+      margin: 0;
+    }
+    
+    .region-count {
+      font-size: 0.85em;
+      color: #789;
+      margin-top: 0.3em;
+    }
+    
+    /* Popular searches */
+    .popular-searches {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.5em;
+      margin: 2em 0;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+    }
+    
+    .searches-title {
+      font-size: 1.1em;
+      color: #2b3a4b;
+      margin-top: 0;
+      margin-bottom: 1em;
+    }
+    
+    .search-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8em;
+    }
+    
+    .search-tag {
+      background: #f0f2f5;
+      color: #444;
+      padding: 0.5em 1em;
+      border-radius: 20px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    
+    .search-tag:hover {
+      background: #2962ff;
+      color: white;
+    }
+    
+    /* Newsletter */
+    .newsletter {
+      background: #2b3a4b;
+      color: white;
+      padding: 2em;
+      border-radius: 10px;
+      margin: 3em 0;
+      text-align: center;
+    }
+    
+    .newsletter h2 {
+      margin-top: 0;
+      font-size: 1.5em;
+    }
+    
+    .newsletter p {
+      margin-bottom: 1.5em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .newsletter-form {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .newsletter-email {
+      flex-grow: 1;
+      padding: 0.8em 1em;
+      border: none;
+      border-radius: 6px 0 0 6px;
+      font-size: 1em;
+    }
+    
+    .newsletter-submit {
+      background: #2962ff;
+      color: white;
+      border: none;
+      padding: 0 1.5em;
+      border-radius: 0 6px 6px 0;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .newsletter-submit:hover {
+      background: #1e4fcc;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top:2.5em; background:#2b3a4b; color:#fff; text-align:center; padding:1.5em 0 1em 0;
+      font-size:0.93em; border-radius:12px 12px 0 0;
+    }
+    footer a { color:#fff; margin:0 10px; text-decoration:underline;}
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 2em 0;
+      gap: 0.5em;
+    }
+    
+    .page-button {
+      background: white;
+      border: 1px solid #ddd;
+      color: #444;
+      min-width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .page-button:hover {
+      background: #f8f9fa;
+    }
+    
+    .page-button.active {
+      background: #2962ff;
+      color: white;
+      border-color: #2962ff;
+    }
+    
+    .page-button.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .top-destinations-controls {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .top-destinations-filter {
+        width: 100%;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .filter-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .destinations-footer {
+        flex-direction: column;
+        gap: 0.8em;
+        text-align: center;
+      }
+    }
+    
+    @media (max-width:600px) {
+      header { text-align:center; }
+      nav { position:static; display:block; margin-top:1em; }
+      
+      .page-title {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .top-destinations-list {
+        grid-template-columns: 1fr;
+      }
+      
+      .region-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">TRAVELHACKS</span>
+    <nav>
+      <div class="dropdown">
+        <button class="dropbtn"> &#x25BC;</button>
+        <div class="dropdown-content" id="dropdown-menu">
+          <a href="index.html">Home</a>
+          <a href="catalog.html">Catalog</a>
+          <a href="places.html" class="active">Places</a>
+          <a href="#media" id="media-link">Media</a>
+          <a href="#contact" id="contact-link">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-title">
+      <div>
+        <h1>Top Travel Destinations</h1>
+        <p class="page-description">Discover the world's most incredible destinations based on millions of traveler reviews</p>
+      </div>
+      <div id="current-user">
+        <span>Logged in as: gregoryclayton</span>
+        <span> • </span>
+        <span>2025-08-05 01:48:21</span>
+      </div>
+    </div>
+    
+    <div class="top-destinations-section">
+      <div class="top-destinations-controls">
+        <div class="top-destinations-filter">
+          <div class="filter-group">
+            <label class="destinations-sort-label" for="destinations-sort">Sort by:</label>
+            <select class="destinations-sort-select" id="destinations-sort">
+              <option value="rank">Top Rated</option>
+              <option value="trending">Trending</option>
+              <option value="affordable">Most Affordable</option>
+              <option value="sustainable">Eco-Friendly</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="destinations-sort-label" for="region-filter">Region:</label>
+            <select class="destinations-sort-select" id="region-filter">
+              <option value="all">All Regions</option>
+              <option value="europe">Europe</option>
+              <option value="asia">Asia</option>
+              <option value="northamerica">North America</option>
+              <option value="southamerica">South America</option>
+              <option value="africa">Africa</option>
+              <option value="oceania">Oceania</option>
+            </select>
+          </div>
+          
+          <div class="filter-group">
+            <label class="destinations-sort-label" for="type-filter">Type:</label>
+            <select class="destinations-sort-select" id="type-filter">
+              <option value="all">All Types</option>
+              <option value="beach">Beach</option>
+              <option value="city">City</option>
+              <option value="mountain">Mountain</option>
+              <option value="cultural">Cultural</option>
+              <option value="adventure">Adventure</option>
+            </select>
+          </div>
+        </div>
+        
+        <div class="top-destinations-last-updated">
+          Data updated: August 5, 2025
+        </div>
+      </div>
+      
+      <div class="top-destinations-list" id="top-destinations-list">
+        <!-- Destinations will be loaded here by JavaScript -->
+      </div>
+      
+      <div class="pagination">
+        <button class="page-button disabled">«</button>
+        <button class="page-button active">1</button>
+        <button class="page-button">2</button>
+        <button class="page-button">3</button>
+        <button class="page-button">4</button>
+        <button class="page-button">»</button>
+      </div>
+      
+      <div class="destinations-footer">
+        <div class="destinations-api-credit">
+          Data aggregated from TripAdvisor, Booking.com, Expedia, Airbnb & Hotels.com
+        </div>
+        <a href="#" class="destinations-view-all">Download Complete Rankings (PDF) →</a>
+      </div>
+    </div>
+    
+    <div class="popular-searches">
+      <h3 class="searches-title">Popular Destination Searches</h3>
+      <div class="search-tags">
+        <span class="search-tag">Bali Beaches</span>
+        <span class="search-tag">Tokyo Nightlife</span>
+        <span class="search-tag">Paris Restaurants</span>
+        <span class="search-tag">New York Museums</span>
+        <span class="search-tag">Barcelona Architecture</span>
+        <span class="search-tag">Kyoto Temples</span>
+        <span class="search-tag">Santorini Views</span>
+        <span class="search-tag">Swiss Alps Hiking</span>
+        <span class="search-tag">Machu Picchu Tours</span>
+        <span class="search-tag">Safari Kenya</span>
+        <span class="search-tag">Great Barrier Reef</span>
+        <span class="search-tag">Venice Canals</span>
+      </div>
+    </div>
+    
+    <div class="regions-container">
+      <h2 class="region-title">Explore by Region</h2>
+      <div class="region-grid">
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1491557345352-5929e343eb89?auto=format&fit=crop&w=500&q=80" alt="Europe" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">Europe</h3>
+            <div class="region-count">238 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1535139262971-c51845709a48?auto=format&fit=crop&w=500&q=80" alt="Asia" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">Asia</h3>
+            <div class="region-count">186 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=500&q=80" alt="North America" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">North America</h3>
+            <div class="region-count">142 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=500&q=80" alt="South America" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">South America</h3>
+            <div class="region-count">98 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1523805009345-7448845a9e53?auto=format&fit=crop&w=500&q=80" alt="Africa" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">Africa</h3>
+            <div class="region-count">124 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1588001400947-6385aef4ab0e?auto=format&fit=crop&w=500&q=80" alt="Oceania" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">Oceania</h3>
+            <div class="region-count">76 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1579687196544-08ae8649d9db?auto=format&fit=crop&w=500&q=80" alt="Middle East" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">Middle East</h3>
+            <div class="region-count">68 destinations</div>
+          </div>
+        </div>
+        
+        <div class="region-card">
+          <img src="https://images.unsplash.com/photo-1549407911-581067a316d3?auto=format&fit=crop&w=500&q=80" alt="Caribbean" class="region-image">
+          <div class="region-content">
+            <h3 class="region-name">Caribbean</h3>
+            <div class="region-count">52 destinations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="newsletter">
+      <h2>Get Destination Updates</h2>
+      <p>Subscribe to receive our monthly destination highlights, travel tips, and exclusive deals for your next adventure.</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Your email address" class="newsletter-email" required>
+        <button type="submit" class="newsletter-submit">Subscribe</button>
+      </form>
+    </div>
+  </main>
+  
+  <footer>
+    <div style="margin-bottom:0.8em;">
+      <a href="index.html">Home</a> |
+      <a href="catalog.html">Catalog</a> |
+      <a href="places.html">Places</a> |
+      <a href="#media">Media</a> |
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="margin-bottom:0.5em;">
+      <a href="https://twitter.com/" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://facebook.com/" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div>
+      &copy; 2025 TRAVELHACKS. All Rights Reserved.
+    </div>
+  </footer>
+  
+  <script>
+    // Top Destinations Data (would normally come from multiple APIs)
+    const topDestinations = [
+      {
+        rank: 1,
+        name: "Kyoto",
+        country: "Japan",
+        region: "asia",
+        type: "cultural",
+        rating: 4.8,
+        reviews: 128756,
+        description: "Ancient temples, traditional tea houses, and serene gardens make Kyoto Japan's cultural heart.",
+        image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: false,
+        sustainable: true,
+        tags: ["Cultural", "Temples", "Gardens", "Historic"]
+      },
+      {
+        rank: 2,
+        name: "Santorini",
+        country: "Greece",
+        region: "europe",
+        type: "beach",
+        rating: 4.7,
+        reviews: 142987,
+        description: "White-washed buildings, blue domes, and spectacular caldera views define this iconic Greek isle.",
+        image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: false,
+        sustainable: false,
+        tags: ["Island", "Views", "Beach", "Luxury"]
+      },
+      {
+        rank: 3,
+        name: "Banff",
+        country: "Canada",
+        region: "northamerica",
+        type: "mountain",
+        rating: 4.7,
+        reviews: 98643,
+        description: "Turquoise lakes, snow-capped peaks, and abundant wildlife in the heart of the Canadian Rockies.",
+        image: "https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: false,
+        sustainable: true,
+        tags: ["Mountains", "Lakes", "Wildlife", "Hiking"]
+      },
+      {
+        rank: 4,
+        name: "Lisbon",
+        country: "Portugal",
+        region: "europe",
+        type: "city",
+        rating: 4.6,
+        reviews: 115432,
+        description: "Historic trams, colorful neighborhoods, and soulful fado music in this charming coastal capital.",
+        image: "https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false,
+        tags: ["City", "Historic", "Food", "Coastal"]
+      },
+      {
+        rank: 5,
+        name: "Bali",
+        country: "Indonesia",
+        region: "asia",
+        type: "beach",
+        rating: 4.6,
+        reviews: 167540,
+        description: "Rice terraces, sacred temples, and vibrant culture on the Island of the Gods.",
+        image: "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: true,
+        sustainable: false,
+        tags: ["Beach", "Culture", "Temple", "Nature"]
+      },
+      {
+        rank: 6,
+        name: "Marrakech",
+        country: "Morocco",
+        region: "africa",
+        type: "cultural",
+        rating: 4.5,
+        reviews: 89254,
+        description: "Ancient medinas, vibrant souks, and ornate riads in this magical North African city.",
+        image: "https://images.unsplash.com/photo-1539020140719-ff770e7a2172?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false,
+        tags: ["Cultural", "Markets", "Historic", "Architecture"]
+      },
+      {
+        rank: 7,
+        name: "New Zealand",
+        country: "South Island",
+        region: "oceania",
+        type: "adventure",
+        rating: 4.8,
+        reviews: 75943,
+        description: "Dramatic landscapes from glaciers to fjords in this natural wonderland.",
+        image: "https://images.unsplash.com/photo-1469554466046-39a71aa772a7?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: false,
+        sustainable: true,
+        tags: ["Nature", "Adventure", "Hiking", "Scenic"]
+      },
+      {
+        rank: 8,
+        name: "Dubrovnik",
+        country: "Croatia",
+        region: "europe",
+        type: "city",
+        rating: 4.5,
+        reviews: 78543,
+        description: "Ancient walled city with red-tiled roofs overlooking the sparkling Adriatic Sea.",
+        image: "https://images.unsplash.com/photo-1606820854416-439b3305ff39?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false,
+        tags: ["Coastal", "Historic", "City", "Architecture"]
+      },
+      {
+        rank: 9,
+        name: "Cape Town",
+        country: "South Africa",
+        region: "africa",
+        type: "city",
+        rating: 4.7,
+        reviews: 82156,
+        description: "Table Mountain, stunning beaches, and vibrant culture at Africa's southern tip.",
+        image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false,
+        tags: ["City", "Mountain", "Beach", "Wine"]
+      },
+      {
+        rank: 10,
+        name: "Reykjavik",
+        country: "Iceland",
+        region: "europe",
+        type: "adventure",
+        rating: 4.6,
+        reviews: 65432,
+        description: "Gateway to Iceland's natural wonders: volcanoes, geysers, and the Northern Lights.",
+        image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: false,
+        sustainable: true,
+        tags: ["Adventure", "Nature", "Northern Lights", "Geothermal"]
+      },
+      {
+        rank: 11,
+        name: "Tokyo",
+        country: "Japan",
+        region: "asia",
+        type: "city",
+        rating: 4.7,
+        reviews: 143256,
+        description: "Ultramodern and traditional blend in this pulsating metropolis with incredible food and culture.",
+        image: "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: false,
+        sustainable: false,
+        tags: ["City", "Technology", "Food", "Shopping"]
+      },
+      {
+        rank: 12,
+        name: "Machu Picchu",
+        country: "Peru",
+        region: "southamerica",
+        type: "cultural",
+        rating: 4.9,
+        reviews: 87432,
+        description: "Ancient Incan citadel set against a breathtaking mountain backdrop in the Peruvian Andes.",
+        image: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: true,
+        sustainable: true,
+        tags: ["Historic", "Cultural", "Mountain", "Archaeological"]
+      }
+    ];
+
+    // Render star rating
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      let stars = '';
+      
+      for (let i = 0; i < fullStars; i++) {
+        stars += '★';
+      }
+      
+      if (halfStar) {
+        stars += '½';
+      }
+      
+      const emptyStars = 5 - stars.length;
+      for (let i = 0; i < emptyStars; i++) {
+        stars += '☆';
+      }
+      
+      return stars;
+    }
+
+    // Format number with commas
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Render Top Destinations
+    function renderTopDestinations(destinations) {
+      const destinationsContainer = document.getElementById('top-destinations-list');
+      destinationsContainer.innerHTML = '';
+      
+      destinations.forEach(destination => {
+        const card = document.createElement('div');
+        card.className = 'destination-card';
+        
+        // Create star rating
+        const stars = renderStars(destination.rating);
+        
+        // Create tags
+        const tagElements = destination.tags.map(tag => 
+          `<span class="destination-tag">${tag}</span>`
+        ).join('');
+        
+        card.innerHTML = `
+          <div class="destination-rank">${destination.rank}</div>
+          <img src="${destination.image}" alt="${destination.name}" class="destination-image">
+          <div class="destination-content">
+            <h3 class="destination-name">${destination.name}</h3>
+            <div class="destination-location">${destination.country}</div>
+            <div class="destination-rating">
+              <div class="rating-stars">${stars}</div>
+              <div class="rating-score">${destination.rating}</div>
+              <div class="rating-count">(${formatNumber(destination.reviews)} reviews)</div>
+            </div>
+            <p class="destination-description">${destination.description}</p>
+            <div class="destination-tags">
+              ${tagElements}
+            </div>
+            <div class="destination-sources">
+              <div class="destination-source-logos">
+                <div class="source-logo" title="TripAdvisor">TA</div>
+                <div class="source-logo" title="Booking.com">BC</div>
+                <div class="source-logo" title="Expedia">EX</div>
+                <div class="source-logo" title="Airbnb">AB</div>
+              </div>
+              <a href="#" class="destination-more">View Details →</a>
+            </div>
+          </div>
+        `;
+        
+        destinationsContainer.appendChild(card);
+      });
+    }
+
+    // Filter destinations based on selected options
+    function filterDestinations() {
+      const sortBy = document.getElementById('destinations-sort').value;
+      const regionFilter = document.getElementById('region-filter').value;
+      const typeFilter = document.getElementById('type-filter').value;
+      
+      // First apply region and type filters
+      let filteredDestinations = [...topDestinations];
+      
+      if (regionFilter !== 'all') {
+        filteredDestinations = filteredDestinations.filter(dest => dest.region === regionFilter);
+      }
+      
+      if (typeFilter !== 'all') {
+        filteredDestinations = filteredDestinations.filter(dest => dest.type === typeFilter);
+      }
+      
+      // Then apply sorting
+      switch(sortBy) {
+        case 'rank':
+          // Already sorted by rank
+          break;
+        case 'trending':
+          filteredDestinations.sort((a, b) => {
+            if (a.trendingUp === b.trendingUp) return a.rank - b.rank;
+            return a.trendingUp ? -1 : 1;
+          });
+          break;
+        case 'affordable':
+          filteredDestinations.sort((a, b) => {
+            if (a.affordable === b.affordable) return a.rank - b.rank;
+            return a.affordable ? -1 : 1;
+          });
+          break;
+        case 'sustainable':
+          filteredDestinations.sort((a, b) => {
+            if (a.sustainable === b.sustainable) return a.rank - b.rank;
+            return a.sustainable ? -1 : 1;
+          });
+          break;
+      }
+      
+      return filteredDestinations;
+    }
+
+    // Initialize the page
+    function init() {
+      // Initial render
+      renderTopDestinations(topDestinations);
+      
+      // Set up event listeners for filters
+      document.getElementById('destinations-sort').addEventListener('change', function() {
+        const filteredDestinations = filterDestinations();
+        renderTopDestinations(filteredDestinations);
+      });
+      
+      document.getElementById('region-filter').addEventListener('change', function() {
+        const filteredDestinations = filterDestinations();
+        renderTopDestinations(filteredDestinations);
+      });
+      
+      document.getElementById('type-filter').addEventListener('change', function() {
+        const filteredDestinations = filterDestinations();
+        renderTopDestinations(filteredDestinations);
+      });
+      
+      // Set up pagination (simplified for demo)
+      document.querySelectorAll('.pagination .page-button').forEach(button => {
+        if (!button.classList.contains('disabled')) {
+          button.addEventListener('click', function() {
+            // Remove active class from all buttons
+            document.querySelectorAll('.pagination .page-button').forEach(btn => {
+              btn.classList.remove('active');
+            });
+            
+            // Add active class to clicked button (if it's a number)
+            if (!this.textContent.includes('«') && !this.textContent.includes('»')) {
+              this.classList.add('active');
+            }
+            
+            // In a real application, this would load the next page of results
+            document.querySelector('.top-destinations-controls').scrollIntoView({behavior: 'smooth'});
+          });
+        }
+      });
+      
+      // Popular search tags
+      document.querySelectorAll('.search-tag').forEach(tag => {
+        tag.addEventListener('click', function() {
+          alert(`Searching for "${this.textContent}" destinations...`);
+        });
+      });
+      
+      // Newsletter form
+      document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const emailInput = document.querySelector('.newsletter-email');
+        
+        if (emailInput.value) {
+          alert(`Thank you for subscribing with ${emailInput.value}! You'll receive our destination updates soon.`);
+          emailInput.value = '';
+        }
+      });
+    }
+    
+    // Run initialization when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>

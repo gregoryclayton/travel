@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Wanderly | Travel Blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background:#f7f7fa; color:#222; }
+    header { background:#2b3a4b; color:#fff; padding:1.2em 1em; position:relative; height:50px;}
+    .logo { font-size:2em; font-weight:bold; letter-spacing:2px; }
+    nav { position:absolute; right:1em; top:1.5em; }
+    .dropdown { display:inline-block; position:relative; }
+    .dropbtn {
+      background:#2b3a4b; color:#fff;  font-size:1.2em;
+      border:none; cursor:pointer; border-radius:6px;
+    }
+    .dropdown-content {
+      display:none; position:absolute; background:#fff; min-width:140px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.08); z-index:1;
+      border-radius:6px; right:0; margin-top:0.1em;
+    }
+    .dropdown-content a {
+      color:#2b3a4b; padding:0.8em 1.2em; text-decoration:none; display:block;
+      font-size:1em; border-bottom:1px solid #eee;
+    }
+    .dropdown-content a:last-child { border-bottom:none; }
+    .dropdown-content a:hover { background:#f9f9fb; }
+    .dropdown:hover .dropdown-content { display:block; }
+    main { max-width:950px; margin:2em auto; padding:0 1em; }
+    /* Carousel styles */
+    .carousel-container {
+      width:100%; max-width:950px; margin:1.2em auto 2em auto; position:relative;
+    }
+    .carousel {
+      position:relative; width:100%; height:340px; overflow:hidden; border-radius:16px;
+      box-shadow: 0 2px 12px rgba(44,62,80,0.09); background:#eee;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .carousel-slide {
+      position:absolute; top:0; left:0; width:100%; height:100%; opacity:0; transition:opacity 0.6s;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .carousel-slide.active { opacity:1; z-index:2; }
+    .carousel-slide img {
+      width:100%; height:100%; object-fit:cover; border-radius:16px;
+      filter:brightness(0.91);
+    }
+    .carousel-caption {
+      position:absolute; left:0; bottom:0; width:100%; background:rgba(44,62,80,0.54);
+      color:#fff; padding:1.1em; border-radius:0 0 16px 16px;
+      font-size:1.05em;
+      text-shadow: 0 2px 10px #222;
+    }
+    .carousel-controls {
+      position:absolute; top:50%; left:0; width:100%; display:flex; justify-content:space-between;
+      transform:translateY(-50%);
+      z-index:3;
+    }
+    .carousel-btn {
+      background:rgba(44,62,80,0.55); color:#fff; border:none; font-size:1.8em;
+      padding:0.1em 0.4em; border-radius:6px; cursor:pointer; transition:background 0.2s;
+    }
+    .carousel-btn:hover { background:rgba(44,62,80,0.9);}
+    .carousel-indicators {
+      position:absolute; bottom:10px; left:50%; transform:translateX(-50%);
+      display:flex; gap:8px; z-index:4;
+    }
+    .carousel-indicators span {
+      display:block; width:13px; height:13px; background:#fff; border-radius:50%;
+      opacity:0.6; cursor:pointer; border:2px solid #2b3a4b;
+      transition:opacity 0.2s, background 0.2s;
+    }
+    .carousel-indicators .active { opacity:1; background:#2962ff; }
+    .gallery-title { font-size:1.35em; margin-bottom:0.8em; color:#2b3a4b; letter-spacing:1px;}
+    .gallery {
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1.5em; margin-bottom:2em;
+    }
+    .gallery-article {
+      background:#fff; border-radius:10px; overflow:hidden; box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+      display:flex; flex-direction:column; transition:box-shadow 0.2s;
+    }
+    .gallery-article:hover { box-shadow: 0 8px 24px rgba(44,62,80,0.13);}
+    .gallery-article img {
+      width:100%; aspect-ratio: 16 / 10; object-fit:cover;
+      display:block; background:#ccc;
+    }
+    .gallery-article .content {
+      padding:1.1em 1em 1em 1em; flex:1 1 auto; display:flex; flex-direction:column;
+    }
+    .gallery-article h2 {
+      margin:0; font-size:1.15em; color:#222;
+    }
+    .gallery-article .meta {
+      font-size:0.92em; color:#789; margin:0.4em 0 0.7em 0;
+    }
+    .gallery-article p { flex:1 1 auto; margin:0 0 0.6em 0;}
+    .gallery-article a.readmore {
+      color:#2962ff; text-decoration:none; font-weight:500; font-size:0.99em;
+      align-self:flex-start; margin-top:auto;
+    }
+    .catalog-title { font-size:1.15em; margin:2.2em 0 1em 0; color:#2b3a4b;}
+    .catalog {
+      display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:1.1em;
+    }
+    .catalog-article {
+      background:#fff; border-radius:8px; box-shadow:0 1px 4px rgba(44,62,80,0.06);
+      padding:0.9em 1em; display:flex; flex-direction:column;
+      transition:box-shadow 0.15s;
+    }
+    .catalog-article:hover { box-shadow: 0 4px 16px rgba(44,62,80,0.13);}
+    .catalog-article h3 { margin:0 0 0.35em 0; font-size:1.03em; }
+    .catalog-article .meta { font-size:0.89em; color:#789; margin-bottom:0.45em;}
+    .catalog-article a.readmore { color:#2962ff; text-decoration:none; font-size:0.96em;}
+    @media (max-width:600px) {
+      header { text-align:center; }
+      nav { position:static; display:block; margin-top:1em; }
+      .carousel { height:200px;}
+    }
+    footer {
+      margin-top:2.5em; background:#2b3a4b; color:#fff; text-align:center; padding:1.5em 0 1em 0;
+      font-size:0.93em; border-radius:12px 12px 0 0;
+    }
+    footer a { color:#fff; margin:0 10px; text-decoration:underline;}
+    
+    /* RSS Feed Section Styles */
+    .rss-section-title { 
+      font-size:1.35em; 
+      margin:2.5em 0 1em 0; 
+      color:#2b3a4b; 
+      letter-spacing:1px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    
+    .rss-refresh-btn {
+      background: #2962ff;
+      color: white;
+      border: none;
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      font-size: 0.7em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .rss-refresh-btn:hover {
+      background: #1e4fcc;
+    }
+    
+    .rss-feeds-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 1.5em;
+      margin-bottom: 2em;
+    }
+    
+    .rss-blog-section {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+      display: flex;
+      flex-direction: column;
+      padding: 1.2em;
+    }
+    
+    .rss-blog-title {
+      margin: 0 0 0.8em 0;
+      font-size: 1.1em;
+      color: #2b3a4b;
+      border-bottom: 2px solid #f0f2f5;
+      padding-bottom: 0.5em;
+    }
+    
+    .rss-feed-items {
+      display: flex;
+      flex-direction: column;
+      gap: 1em;
+    }
+    
+    .rss-feed-item {
+      padding: 0.8em;
+      background: #f7f9fc;
+      border-radius: 6px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    
+    .rss-feed-item:hover {
+      background: #eef2f7;
+      transform: translateY(-2px);
+    }
+    
+    .rss-item-title {
+      font-weight: 500;
+      margin-bottom: 0.3em;
+      color: #2b3a4b;
+    }
+    
+    .rss-item-date {
+      font-size: 0.85em;
+      color: #789;
+      margin-bottom: 0.5em;
+    }
+    
+    .rss-item-excerpt {
+      font-size: 0.95em;
+      margin-bottom: 0.6em;
+      color: #444;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    
+    .rss-item-link {
+      color: #2962ff;
+      text-decoration: none;
+      font-size: 0.9em;
+      font-weight: 500;
+      align-self: flex-start;
+    }
+    
+    .rss-loader {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 2em;
+      font-style: italic;
+      color: #789;
+    }
+    
+    .rss-error {
+      color: #e53935;
+      font-size: 0.9em;
+      margin: 0.5em 0;
+    }
+    
+    /* Top Destinations Section Styles */
+    .top-destinations-section {
+      margin: 2.5em 0 1em 0;
+    }
+    
+    .top-destinations-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2em;
+    }
+    
+    .top-destinations-title {
+      font-size: 1.35em;
+      color: #2b3a4b;
+      letter-spacing: 1px;
+    }
+    
+    .top-destinations-info {
+      font-size: 0.85em;
+      color: #789;
+      font-style: italic;
+    }
+    
+    .top-destinations-controls {
+      display: flex;
+      gap: 0.8em;
+      align-items: center;
+    }
+    
+    .destinations-sort-label {
+      font-size: 0.9em;
+      color: #555;
+    }
+    
+    .destinations-sort-select {
+      padding: 0.4em 0.8em;
+      border-radius: 4px;
+      border: 1px solid #ccd;
+      background: #fff;
+      font-size: 0.9em;
+      color: #444;
+    }
+    
+    .top-destinations-last-updated {
+      font-size: 0.85em;
+      color: #789;
+      margin-left: 1em;
+    }
+    
+    .top-destinations-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5em;
+      margin-bottom: 1em;
+    }
+    
+    .destination-card {
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(44,62,80,0.08);
+      transition: transform 0.2s, box-shadow 0.2s;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .destination-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 20px rgba(44,62,80,0.15);
+    }
+    
+    .destination-rank {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: rgba(255,255,255,0.85);
+      color: #2b3a4b;
+      font-weight: bold;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1em;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      z-index: 1;
+    }
+    
+    .destination-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      display: block;
+    }
+    
+    .destination-content {
+      padding: 1.2em;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .destination-name {
+      font-size: 1.2em;
+      font-weight: 600;
+      margin: 0 0 0.4em 0;
+      color: #2b3a4b;
+    }
+    
+    .destination-location {
+      font-size: 0.9em;
+      color: #789;
+      margin-bottom: 0.8em;
+    }
+    
+    .destination-rating {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8em;
+    }
+    
+    .rating-stars {
+      color: #ffb100;
+      font-size: 1.1em;
+      letter-spacing: 1px;
+      margin-right: 0.5em;
+    }
+    
+    .rating-score {
+      font-weight: 600;
+      font-size: 1.1em;
+      color: #2b3a4b;
+    }
+    
+    .rating-count {
+      font-size: 0.85em;
+      color: #789;
+      margin-left: 0.5em;
+    }
+    
+    .destination-description {
+      color: #444;
+      font-size: 0.95em;
+      margin-bottom: 1em;
+      flex-grow: 1;
+    }
+    
+    .destination-sources {
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .destination-source-logos {
+      display: flex;
+      gap: 0.5em;
+    }
+    
+    .source-logo {
+      width: 22px;
+      height: 22px;
+      border-radius: 4px;
+      background: #f5f5f7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7em;
+      color: #555;
+      border: 1px solid #eee;
+    }
+    
+    .destination-more {
+      color: #2962ff;
+      text-decoration: none;
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+    
+    .destinations-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.9em;
+      color: #789;
+      margin-top: 1em;
+    }
+    
+    .destinations-api-credit {
+      font-style: italic;
+    }
+    
+    .destinations-view-all {
+      color: #2962ff;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    
+    @media (max-width: 768px) {
+      .top-destinations-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.8em;
+      }
+      
+      .top-destinations-controls {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .top-destinations-last-updated {
+        margin-left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">TRAVELHACKS</span>
+    <nav>
+      <div class="dropdown">
+        <button class="dropbtn"> &#x25BC;</button>
+        <div class="dropdown-content" id="dropdown-menu">
+          <a href="#catalog" id="catalog-link">Catalog</a>
+          <a href="#places" id="places-link">Places</a>
+          <a href="#media" id="media-link">Media</a>
+          <a href="#top-destinations" id="destinations-link">Top Destinations</a>
+          <a href="#feeds" id="feeds-link">Travel Feeds</a>
+          <a href="#contact" id="contact-link">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Carousel -->
+  <div class="carousel-container">
+    <div class="carousel" id="carousel"></div>
+    <div class="carousel-controls">
+      <button class="carousel-btn" id="carousel-prev">&#10094;</button>
+      <button class="carousel-btn" id="carousel-next">&#10095;</button>
+    </div>
+    <div class="carousel-indicators" id="carousel-indicators"></div>
+  </div>
+
+  <main>
+    <div class="gallery-title">Featured Destinations</div>
+    <div class="gallery" id="gallery"></div>
+    <div class="catalog-title" id="catalog">Older Adventures</div>
+    <div class="catalog" id="catalog-list"></div>
+    
+    <!-- Top Destinations Section -->
+    <div class="top-destinations-section" id="top-destinations">
+      <div class="top-destinations-header">
+        <div>
+          <h2 class="top-destinations-title">Top 10 Destinations of 2025</h2>
+          <p class="top-destinations-info">Based on 12.8M+ traveler reviews from leading booking platforms</p>
+        </div>
+        <div class="top-destinations-controls">
+          <label class="destinations-sort-label" for="destinations-sort">Sort by:</label>
+          <select class="destinations-sort-select" id="destinations-sort">
+            <option value="rank">Top Rated</option>
+            <option value="trending">Trending</option>
+            <option value="affordable">Most Affordable</option>
+            <option value="sustainable">Eco-Friendly</option>
+          </select>
+          <span class="top-destinations-last-updated">Last updated: August 5, 2025</span>
+        </div>
+      </div>
+      
+      <div class="top-destinations-list" id="top-destinations-list">
+        <!-- Destinations will be loaded here by JavaScript -->
+      </div>
+      
+      <div class="destinations-footer">
+        <div class="destinations-api-credit">
+          Data aggregated from TripAdvisor, Booking.com, Expedia, Airbnb & Hotels.com
+        </div>
+        <a href="#" class="destinations-view-all">View Complete Rankings →</a>
+      </div>
+    </div>
+    
+    <!-- RSS Feeds Section -->
+    <div class="rss-section-title" id="feeds">
+      <span>Travel Inspiration From Around The Web</span>
+      <button class="rss-refresh-btn" id="refresh-feeds">
+        <i class="fas fa-sync-alt"></i> Refresh Feeds
+      </button>
+    </div>
+    <div class="rss-feeds-container" id="rss-feeds-container"></div>
+    
+    <div style="margin:2.5em 0 0 0; display:none;" id="places">
+      <h2 style="margin-top:0;">Places</h2>
+      <p>Discover guides, tips, and photos from our favorite destinations worldwide.</p>
+      <ul style="max-width:400px; margin:auto; text-align:left;">
+        <li>Italy: Rome, Venice, Florence, Amalfi Coast</li>
+        <li>Japan: Tokyo, Kyoto, Hokkaido</li>
+        <li>Canada: Banff, Vancouver, Montreal</li>
+        <li>Greece: Santorini, Athens, Crete</li>
+        <li>Indonesia: Bali, Java, Lombok</li>
+      </ul>
+    </div>
+    <div style="margin:2.5em 0 0 0; display:none;" id="media">
+      <h2 style="margin-top:0;">Media</h2>
+      <p>Browse our travel photo galleries and video stories.</p>
+      <ul style="max-width:400px; margin:auto; text-align:left;">
+        <li><a href="#">Photo Gallery: Summer in Europe</a></li>
+        <li><a href="#">Video: Hikes in Patagonia</a></li>
+        <li><a href="#">Photo Gallery: Urban Nights</a></li>
+        <li><a href="#">Video: Food Markets Around the World</a></li>
+      </ul>
+    </div>
+    <div style="margin:2.5em 0 0 0; display:none;" id="contact">
+      <h2 style="margin-top:0;">Contact</h2>
+      <form id="contactForm" style="max-width:350px; margin:auto;">
+        <label for="contactName">Your Name</label>
+        <input type="text" id="contactName" required style="width:100%; margin-bottom:0.8em; padding:0.5em 0.7em;">
+        <label for="contactEmail">Your Email</label>
+        <input type="email" id="contactEmail" required style="width:100%; margin-bottom:0.8em; padding:0.5em 0.7em;">
+        <label for="contactMsg">Message</label>
+        <textarea id="contactMsg" required style="width:100%; margin-bottom:1em; padding:0.5em 0.7em;" rows="4"></textarea>
+        <button type="submit" style="background:#2962ff; color:#fff; border:none; padding:0.7em 1.4em; border-radius:6px; font-size:1em;">Send</button>
+        <div id="formStatus" style="margin-top:1em; color:#2b3a4b; font-size:0.99em;"></div>
+      </form>
+    </div>
+  </main>
+  <footer>
+    <div style="margin-bottom:0.8em;">
+      <a href="#gallery">Home</a> |
+      <a href="#catalog">Catalog</a> |
+      <a href="#places">Places</a> |
+      <a href="#top-destinations">Top Destinations</a> |
+      <a href="#feeds">Travel Feeds</a> |
+      <a href="#media">Media</a> |
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="margin-bottom:0.5em;">
+      <a href="https://twitter.com/" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://facebook.com/" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div>
+      &copy; 2025 Wanderly. All Rights Reserved.
+    </div>
+  </footer>
+  <script>
+    // Carousel articles (featured)
+    const carouselArticles = [
+      {
+        title: "Exploring the Amalfi Coast",
+        date: "2025-06-01",
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=950&q=80",
+        excerpt: "Sunshine, cliffs, and lemon groves: see how the Amalfi Coast stole our hearts.",
+        link: "#article1"
+      },
+      {
+        title: "Tokyo Nights and Neon Lights",
+        date: "2025-05-19",
+        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=950&q=80",
+        excerpt: "A whirlwind journey through Tokyo's dazzling cityscape and hidden gems.",
+        link: "#article2"
+      },
+      {
+        title: "Hiking the Patagonian Wilderness",
+        date: "2025-04-22",
+        image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=950&q=80",
+        excerpt: "Wind, glaciers, and wild beauty. Patagonia at its most breathtaking.",
+        link: "#article3"
+      }
+    ];
+    // Gallery and catalog
+    const mainArticles = carouselArticles; // Featured = carousel
+    const catalogArticles = [
+      {
+        title: "A Weekend in Prague",
+        date: "2025-03-15",
+        excerpt: "Cobblestone streets, gothic spires, and the best pastries in Central Europe.",
+        link: "#article4"
+      },
+      {
+        title: "Sailing the Greek Isles",
+        date: "2025-02-10",
+        excerpt: "Azure seas and whitewashed villages in a timeless Mediterranean dream.",
+        link: "#article5"
+      },
+      {
+        title: "Canadian Rockies Roadtrip",
+        date: "2024-12-28",
+        excerpt: "Snow-capped peaks, turquoise lakes, and endless adventure.",
+        link: "#article6"
+      },
+      {
+        title: "Bali Beyond the Beaches",
+        date: "2024-11-09",
+        excerpt: "Rice terraces, temples, and the island's secret green heart.",
+        link: "#article7"
+      }
+    ];
+
+    // Carousel logic
+    const carouselDiv = document.getElementById('carousel');
+    const indicatorsDiv = document.getElementById('carousel-indicators');
+    let currentSlide = 0;
+    function renderCarousel() {
+      carouselDiv.innerHTML = '';
+      indicatorsDiv.innerHTML = '';
+      carouselArticles.forEach((article, idx) => {
+        const slide = document.createElement('div');
+        slide.className = 'carousel-slide' + (idx === currentSlide ? ' active' : '');
+        slide.innerHTML = `
+          <img src="${article.image}" alt="${article.title}">
+          <div class="carousel-caption">
+            <h2 style="margin:0 0 0.2em 0; font-size:1.15em;">${article.title}</h2>
+            <div style="font-size:0.95em; opacity:0.85;">${new Date(article.date).toLocaleDateString()}</div>
+            <div style="margin:0.5em 0 0.7em 0; font-size:1em;">${article.excerpt}</div>
+            <a href="${article.link}" style="color:#fff; text-decoration:underline; font-weight:500;">Read More &rarr;</a>
+          </div>
+        `;
+        carouselDiv.appendChild(slide);
+
+        const indicator = document.createElement('span');
+        indicator.className = idx === currentSlide ? 'active' : '';
+        indicator.onclick = () => { currentSlide = idx; renderCarousel(); };
+        indicatorsDiv.appendChild(indicator);
+      });
+    }
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % carouselArticles.length;
+      renderCarousel();
+    }
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + carouselArticles.length) % carouselArticles.length;
+      renderCarousel();
+    }
+    document.getElementById('carousel-next').onclick = nextSlide;
+    document.getElementById('carousel-prev').onclick = prevSlide;
+    let carouselTimer = setInterval(nextSlide, 6000);
+    carouselDiv.onmouseenter = () => clearInterval(carouselTimer);
+    carouselDiv.onmouseleave = () => { carouselTimer = setInterval(nextSlide, 6000); };
+    renderCarousel();
+
+    // Gallery
+    const galleryDiv = document.getElementById('gallery');
+    mainArticles.forEach(article => {
+      const el = document.createElement('article');
+      el.className = 'gallery-article';
+      el.innerHTML = `
+        <img src="${article.image}" alt="${article.title}">
+        <div class="content">
+          <h2>${article.title}</h2>
+          <div class="meta">${new Date(article.date).toLocaleDateString()}</div>
+          <p>${article.excerpt}</p>
+          <a href="${article.link}" class="readmore">Read More &rarr;</a>
+        </div>
+      `;
+      galleryDiv.appendChild(el);
+    });
+
+    // Catalog
+    const catalogDiv = document.getElementById('catalog-list');
+    catalogArticles.forEach(article => {
+      const el = document.createElement('article');
+      el.className = 'catalog-article';
+      el.innerHTML = `
+        <h3>${article.title}</h3>
+        <div class="meta">${new Date(article.date).toLocaleDateString()}</div>
+        <p>${article.excerpt}</p>
+        <a href="${article.link}" class="readmore">Read More &rarr;</a>
+      `;
+      catalogDiv.appendChild(el);
+    });
+
+    // Top Destinations Data (would normally come from multiple APIs)
+    const topDestinations = [
+      {
+        rank: 1,
+        name: "Kyoto",
+        country: "Japan",
+        rating: 4.8,
+        reviews: 128756,
+        description: "Ancient temples, traditional tea houses, and serene gardens make Kyoto Japan's cultural heart.",
+        image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: false,
+        sustainable: true
+      },
+      {
+        rank: 2,
+        name: "Santorini",
+        country: "Greece",
+        rating: 4.7,
+        reviews: 142987,
+        description: "White-washed buildings, blue domes, and spectacular caldera views define this iconic Greek isle.",
+        image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: false,
+        sustainable: false
+      },
+      {
+        rank: 3,
+        name: "Banff",
+        country: "Canada",
+        rating: 4.7,
+        reviews: 98643,
+        description: "Turquoise lakes, snow-capped peaks, and abundant wildlife in the heart of the Canadian Rockies.",
+        image: "https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: false,
+        sustainable: true
+      },
+      {
+        rank: 4,
+        name: "Lisbon",
+        country: "Portugal",
+        rating: 4.6,
+        reviews: 115432,
+        description: "Historic trams, colorful neighborhoods, and soulful fado music in this charming coastal capital.",
+        image: "https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false
+      },
+      {
+        rank: 5,
+        name: "Bali",
+        country: "Indonesia",
+        rating: 4.6,
+        reviews: 167540,
+        description: "Rice terraces, sacred temples, and vibrant culture on the Island of the Gods.",
+        image: "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: true,
+        sustainable: false
+      },
+      {
+        rank: 6,
+        name: "Marrakech",
+        country: "Morocco",
+        rating: 4.5,
+        reviews: 89254,
+        description: "Ancient medinas, vibrant souks, and ornate riads in this magical North African city.",
+        image: "https://images.unsplash.com/photo-1539020140719-ff770e7a2172?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false
+      },
+      {
+        rank: 7,
+        name: "New Zealand",
+        country: "South Island",
+        rating: 4.8,
+        reviews: 75943,
+        description: "Dramatic landscapes from glaciers to fjords in this natural wonderland.",
+        image: "https://images.unsplash.com/photo-1469554466046-39a71aa772a7?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: false,
+        sustainable: true
+      },
+      {
+        rank: 8,
+        name: "Dubrovnik",
+        country: "Croatia",
+        rating: 4.5,
+        reviews: 78543,
+        description: "Ancient walled city with red-tiled roofs overlooking the sparkling Adriatic Sea.",
+        image: "https://images.unsplash.com/photo-1606820854416-439b3305ff39?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false
+      },
+      {
+        rank: 9,
+        name: "Cape Town",
+        country: "South Africa",
+        rating: 4.7,
+        reviews: 82156,
+        description: "Table Mountain, stunning beaches, and vibrant culture at Africa's southern tip.",
+        image: "https://images.unsplash.com/photo-1580060839134-75a5edca2e99?auto=format&fit=crop&w=600&q=80",
+        trendingUp: true,
+        affordable: true,
+        sustainable: false
+      },
+      {
+        rank: 10,
+        name: "Reykjavik",
+        country: "Iceland",
+        rating: 4.6,
+        reviews: 65432,
+        description: "Gateway to Iceland's natural wonders: volcanoes, geysers, and the Northern Lights.",
+        image: "https://images.unsplash.com/photo-1504893524553-b855bce32c67?auto=format&fit=crop&w=600&q=80",
+        trendingUp: false,
+        affordable: false,
+        sustainable: true
+      }
+    ];
+
+    // Render star rating
+    function renderStars(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      let stars = '';
+      
+      for (let i = 0; i < fullStars; i++) {
+        stars += '★';
+      }
+      
+      if (halfStar) {
+        stars += '½';
+      }
+      
+      const emptyStars = 5 - stars.length;
+      for (let i = 0; i < emptyStars; i++) {
+        stars += '☆';
+      }
+      
+      return stars;
+    }
+
+    // Format number with commas
+    function formatNumber(num) {
+      return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+    // Render Top Destinations
+    function renderTopDestinations(destinations) {
+      const destinationsContainer = document.getElementById('top-destinations-list');
+      destinationsContainer.innerHTML = '';
+      
+      destinations.forEach(destination => {
+        const card = document.createElement('div');
+        card.className = 'destination-card';
+        
+        // Create star rating
+        const stars = renderStars(destination.rating);
+        
+        card.innerHTML = `
+          <div class="destination-rank">${destination.rank}</div>
+          <img src="${destination.image}" alt="${destination.name}" class="destination-image">
+          <div class="destination-content">
+            <h3 class="destination-name">${destination.name}</h3>
+            <div class="destination-location">${destination.country}</div>
+            <div class="destination-rating">
+              <div class="rating-stars">${stars}</div>
+              <div class="rating-score">${destination.rating}</div>
+              <div class="rating-count">(${formatNumber(destination.reviews)} reviews)</div>
+            </div>
+            <p class="destination-description">${destination.description}</p>
+            <div class="destination-sources">
+              <div class="destination-source-logos">
+                <div class="source-logo" title="TripAdvisor">TA</div>
+                <div class="source-logo" title="Booking.com">BC</div>
+                <div class="source-logo" title="Expedia">EX</div>
+                <div class="source-logo" title="Airbnb">AB</div>
+              </div>
+              <a href="#" class="destination-more">View Details →</a>
+            </div>
+          </div>
+        `;
+        
+        destinationsContainer.appendChild(card);
+      });
+    }
+
+    // Sort destinations based on selected option
+    function sortDestinations(destinations, sortBy) {
+      let sortedDestinations = [...destinations]; // Create a copy to avoid modifying original
+      
+      switch(sortBy) {
+        case 'rank':
+          // Already sorted by rank
+          break;
+        case 'trending':
+          sortedDestinations.sort((a, b) => {
+            if (a.trendingUp === b.trendingUp) return a.rank - b.rank;
+            return a.trendingUp ? -1 : 1;
+          });
+          break;
+        case 'affordable':
+          sortedDestinations.sort((a, b) => {
+            if (a.affordable === b.affordable) return a.rank - b.rank;
+            return a.affordable ? -1 : 1;
+          });
+          break;
+        case 'sustainable':
+          sortedDestinations.sort((a, b) => {
+            if (a.sustainable === b.sustainable) return a.rank - b.rank;
+            return a.sustainable ? -1 : 1;
+          });
+          break;
+      }
+      
+      return sortedDestinations;
+    }
+
+    // Initial render of top destinations
+    renderTopDestinations(topDestinations);
+    
+    // Sort destinations when dropdown changes
+    document.getElementById('destinations-sort').addEventListener('change', function() {
+      const sortBy = this.value;
+      const sortedDestinations = sortDestinations(topDestinations, sortBy);
+      renderTopDestinations(sortedDestinations);
+    });
+
+    // RSS Feed Implementation
+    const rssFeedsContainer = document.getElementById('rss-feeds-container');
+    const refreshFeedsBtn = document.getElementById('refresh-feeds');
+    
+    // List of travel blogs with their RSS feeds
+    const travelBlogs = [
+      {
+        title: "Nomadic Matt",
+        url: "https://www.nomadicmatt.com/feed/",
+        limit: 4
+      },
+      {
+        title: "The Planet D",
+        url: "https://theplanetd.com/feed/",
+        limit: 4
+      },
+      {
+        title: "Expert Vagabond",
+        url: "https://expertvagabond.com/feed/",
+        limit: 4
+      },
+      {
+        title: "View From The Wing",
+        url: "https://viewfromthewing.com/feed/",
+        limit: 4
+      }
+    ];
+    
+    // Function to fetch RSS feed using a proxy service to avoid CORS issues
+    async function fetchRSSFeed(feedUrl, limit = 5) {
+      // Using rss2json.com as a proxy service to convert RSS to JSON
+      const apiUrl = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedUrl)}&count=${limit}`;
+      
+      try {
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        
+        if (data.status === 'ok') {
+          return data.items;
+        } else {
+          throw new Error(data.message || 'Failed to fetch feed');
+        }
+      } catch (error) {
+        console.error('Error fetching RSS feed:', error);
+        throw error;
+      }
+    }
+    
+    // Format date for RSS feed items
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+    
+    // Extract plain text from HTML content
+    function extractTextFromHTML(html) {
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = html;
+      return tempDiv.textContent || tempDiv.innerText || '';
+    }
+    
+    // Create a feed item element
+    function createFeedItem(item) {
+      const feedItem = document.createElement('div');
+      feedItem.className = 'rss-feed-item';
+      
+      // Extract the first ~100 characters as an excerpt from content
+      let excerpt = extractTextFromHTML(item.content || item.description);
+      excerpt = excerpt.substring(0, 120) + (excerpt.length > 120 ? '...' : '');
+      
+      feedItem.innerHTML = `
+        <div class="rss-item-title">${item.title}</div>
+        <div class="rss-item-date">${formatDate(item.pubDate)}</div>
+        <div class="rss-item-excerpt">${excerpt}</div>
+        <a href="${item.link}" target="_blank" rel="noopener" class="rss-item-link">Read Article →</a>
+      `;
+      
+      return feedItem;
+    }
+    
+    // Create a blog section with its feed items
+    function createBlogSection(blog, feedItems) {
+      const blogSection = document.createElement('div');
+      blogSection.className = 'rss-blog-section';
+      
+      const blogTitle = document.createElement('h3');
+      blogTitle.className = 'rss-blog-title';
+      blogTitle.textContent = blog.title;
+      
+      const feedItemsContainer = document.createElement('div');
+      feedItemsContainer.className = 'rss-feed-items';
+      
+      // Add feed items to container
+      feedItems.forEach(item => {
+        feedItemsContainer.appendChild(createFeedItem(item));
+      });
+      
+      blogSection.appendChild(blogTitle);
+      blogSection.appendChild(feedItemsContainer);
+      
+      return blogSection;
+    }
+    
+    // Load all RSS feeds
+    async function loadAllFeeds() {
+      rssFeedsContainer.innerHTML = `
+        <div class="rss-loader">Loading travel inspiration from around the web...</div>
+      `;
+      
+      try {
+        // Use Promise.all to fetch all feeds in parallel
+        const feedPromises = travelBlogs.map(blog => 
+          fetchRSSFeed(blog.url, blog.limit)
+            .then(items => ({ blog, items }))
+            .catch(error => ({ blog, error }))
+        );
+        
+        const results = await Promise.all(feedPromises);
+        
+        // Clear loader
+        rssFeedsContainer.innerHTML = '';
+        
+        // Process results
+        results.forEach(result => {
+          if (result.items) {
+            // Successfully fetched feed
+            rssFeedsContainer.appendChild(createBlogSection(result.blog, result.items));
+          } else {
+            // Failed to fetch feed
+            const errorSection = document.createElement('div');
+            errorSection.className = 'rss-blog-section';
+            errorSection.innerHTML = `
+              <h3 class="rss-blog-title">${result.blog.title}</h3>
+              <div class="rss-error">Failed to load feed. Please try again later.</div>
+            `;
+            rssFeedsContainer.appendChild(errorSection);
+          }
+        });
+        
+      } catch (error) {
+        console.error('Error loading feeds:', error);
+        rssFeedsContainer.innerHTML = `
+          <div class="rss-error" style="text-align: center; padding: 2em;">
+            Failed to load RSS feeds. Please check your connection and try again.
+          </div>
+        `;
+      }
+    }
+    
+    // Load feeds on page load
+    window.addEventListener('DOMContentLoaded', loadAllFeeds);
+    
+    // Refresh feeds when button is clicked
+    refreshFeedsBtn.addEventListener('click', function() {
+      loadAllFeeds();
+    });
+    
+    // Dropdown menu scroll-to actions
+    function hideSections() {
+      document.getElementById('contact').style.display = 'none';
+      document.getElementById('places').style.display = 'none';
+      document.getElementById('media').style.display = 'none';
+    }
+    document.getElementById('catalog-link').onclick = function(e) {
+      e.preventDefault(); hideSections();
+      document.getElementById('catalog').scrollIntoView({behavior:'smooth'});
+    };
+    document.getElementById('places-link').onclick = function(e) {
+      e.preventDefault(); hideSections();
+      document.getElementById('places').style.display = 'block';
+      document.getElementById('places').scrollIntoView({behavior:'smooth'});
+    };
+    document.getElementById('media-link').onclick = function(e) {
+      e.preventDefault(); hideSections();
+      document.getElementById('media').style.display = 'block';
+      document.getElementById('media').scrollIntoView({behavior:'smooth'});
+    };
+    document.getElementById('contact-link').onclick = function(e) {
+      e.preventDefault(); hideSections();
+      document.getElementById('contact').style.display = 'block';
+      document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+    };
+    document.getElementById('feeds-link').onclick = function(e) {
+      e.preventDefault(); hideSections();
+      document.getElementById('feeds').scrollIntoView({behavior:'smooth'});
+    };
+    document.getElementById('destinations-link').onclick = function(e) {
+      e.preventDefault(); hideSections();
+      document.getElementById('top-destinations').scrollIntoView({behavior:'smooth'});
+    };
+
+    // Footer smooth scroll
+    document.querySelector('footer a[href="#catalog"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      document.getElementById('catalog').scrollIntoView({behavior:'smooth'});
+    }
+    document.querySelector('footer a[href="#places"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      document.getElementById('places').style.display = 'block';
+      document.getElementById('places').scrollIntoView({behavior:'smooth'});
+    }
+    document.querySelector('footer a[href="#media"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      document.getElementById('media').style.display = 'block';
+      document.getElementById('media').scrollIntoView({behavior:'smooth'});
+    }
+    document.querySelector('footer a[href="#contact"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      document.getElementById('contact').style.display = 'block';
+      document.getElementById('contact').scrollIntoView({behavior:'smooth'});
+    }
+    document.querySelector('footer a[href="#gallery"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+    document.querySelector('footer a[href="#feeds"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      document.getElementById('feeds').scrollIntoView({behavior:'smooth'});
+    }
+    document.querySelector('footer a[href="#top-destinations"]').onclick = function(e){
+      e.preventDefault(); hideSections();
+      document.getElementById('top-destinations').scrollIntoView({behavior:'smooth'});
+    }
+
+    // Contact form handler (no backend)
+    document.getElementById('contactForm').onsubmit = function(e) {
+      e.preventDefault();
+      document.getElementById('formStatus').textContent = "Thank you for reaching out! We'll get back to you soon.";
+      this.reset();
+      setTimeout(()=>{document.getElementById('formStatus').textContent='';}, 4000);
+    }
+  </script>
+</body>
+</html>

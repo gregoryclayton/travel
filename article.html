@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title id="article-title-tab">Loading Article...</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background:#f7f7fa; color:#222; }
+    header { background:#2b3a4b; color:#fff; padding:1.2em 1em; position:relative; height:50px;}
+    .logo { font-size:2em; font-weight:bold; letter-spacing:2px; }
+    nav { position:absolute; right:1em; top:1.5em; }
+    .dropdown { display:inline-block; position:relative; }
+    .dropbtn {
+      background:#2b3a4b; color:#fff;  font-size:1.2em;
+      border:none; cursor:pointer; border-radius:6px;
+    }
+    .dropdown-content {
+      display:none; position:absolute; background:#fff; min-width:140px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.08); z-index:1;
+      border-radius:6px; right:0; margin-top:0.1em;
+    }
+    .dropdown-content a {
+      color:#2b3a4b; padding:0.8em 1.2em; text-decoration:none; display:block;
+      font-size:1em; border-bottom:1px solid #eee;
+    }
+    .dropdown-content a:last-child { border-bottom:none; }
+    .dropdown-content a:hover { background:#f9f9fb; }
+    .dropdown:hover .dropdown-content { display:block; }
+    main { max-width:800px; margin:2em auto; padding:0 1em; }
+
+    .article-header {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+      padding: 2em 2em 1.2em 2em;
+      margin-bottom: 2em;
+      text-align: center;
+      position: relative;
+    }
+    .article-title {
+      font-size: 2em;
+      font-weight: 700;
+      color: #2b3a4b;
+      margin: 0 0 0.5em 0;
+    }
+    .article-meta {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1em;
+      color: #789;
+      font-size: 1em;
+      margin-bottom: 1em;
+    }
+    .article-author {
+      display: flex;
+      align-items: center;
+      gap: 0.5em;
+    }
+    .author-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: #eee;
+    }
+    .article-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+      justify-content: center;
+      margin-bottom: 0.9em;
+    }
+    .article-tag {
+      background: #f0f2f5;
+      color: #555;
+      padding: 0.3em 0.8em;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .article-image {
+      width: 100%;
+      max-width: 690px;
+      height: 340px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin: 1.2em auto 0.6em auto;
+      display: block;
+    }
+    .article-excerpt {
+      color: #444;
+      font-size: 1.15em;
+      background: #f7f9fc;
+      border-radius: 8px;
+      padding: 1em 1.2em;
+      margin: 1em 0 2em 0;
+      text-align: center;
+      font-style: italic;
+    }
+    .article-content-block {
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.04);
+      padding: 2em;
+      margin-bottom: 2em;
+      font-size: 1.08em;
+      line-height: 1.7;
+    }
+    .article-content-block img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin: 1.2em 0;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .article-content-block h2, .article-content-block h3, .article-content-block h4 {
+      color: #2b3a4b;
+      margin-top: 1.6em;
+      margin-bottom: 0.6em;
+    }
+    .article-content-block pre {
+      background: #f8f9fa;
+      padding: 1em;
+      border-radius: 5px;
+      overflow-x: auto;
+      font-size: 0.94em;
+    }
+    .article-content-block blockquote {
+      border-left: 4px solid #2962ff;
+      background: #f2f4fa;
+      margin: 1.2em 0;
+      padding: 1em 1.2em;
+      color: #444;
+      border-radius: 6px;
+      font-style: italic;
+    }
+    .article-share {
+      text-align: center;
+      margin: 2em 0 1em 0;
+      color: #789;
+      font-size: 0.98em;
+    }
+    .share-btns {
+      display: flex;
+      justify-content: center;
+      gap: 1em;
+      margin-top: 0.7em;
+    }
+    .share-btn {
+      padding: 0.5em 1.2em;
+      border-radius: 20px;
+      border: none;
+      background: #2962ff;
+      color: white;
+      font-size: 1em;
+      cursor: pointer;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+    .share-btn:hover { background: #1e4fcc; }
+    .article-back {
+      display: inline-block;
+      margin: 2em 0 0.5em 0;
+      color: #2962ff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.05em;
+    }
+    .article-back:hover { text-decoration: underline; }
+    .article-footer-meta {
+      text-align: center;
+      color: #999;
+      margin: 2em 0 0.7em 0;
+      font-size: 0.93em;
+    }
+    .article-related {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.05);
+      padding: 1.5em 2em;
+      margin: 2em 0;
+    }
+    .related-title {
+      color: #2b3a4b;
+      font-weight: 600;
+      font-size: 1.2em;
+      margin-bottom: 1em;
+    }
+    .related-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.2em;
+      justify-content: center;
+    }
+    .related-card {
+      background: #f9f9fb;
+      border-radius: 8px;
+      width: 220px;
+      text-align: left;
+      overflow: hidden;
+      text-decoration: none;
+      color: #222;
+      box-shadow: 0 1px 4px rgba(44,62,80,0.08);
+      transition: box-shadow 0.2s, transform 0.2s;
+      display: flex;
+      flex-direction: column;
+    }
+    .related-card:hover {
+      box-shadow: 0 8px 18px rgba(44,62,80,0.12);
+      transform: translateY(-3px);
+      color: #2962ff;
+    }
+    .related-img {
+      height: 100px;
+      object-fit: cover;
+      width: 100%;
+    }
+    .related-content {
+      padding: 0.7em 1em 1em 1em;
+      font-size: 0.96em;
+    }
+    .related-title-link {
+      font-weight: 600;
+      font-size: 1em;
+      margin-bottom: 0.3em;
+      color: #2b3a4b;
+      text-decoration: none;
+    }
+    .related-title-link:hover { text-decoration: underline; }
+    /* Footer */
+    footer {
+      margin-top:2.5em; background:#2b3a4b; color:#fff; text-align:center; padding:1.5em 0 1em 0;
+      font-size:0.93em; border-radius:12px 12px 0 0;
+    }
+    footer a { color:#fff; margin:0 10px; text-decoration:underline;}
+    @media (max-width: 900px) {
+      main { max-width: 98vw; }
+      .article-header, .article-content-block, .article-related { padding: 1em; }
+    }
+    @media (max-width:600px) {
+      header { text-align:center; }
+      nav { position:static; display:block; margin-top:1em; }
+      .article-title { font-size: 1.3em;}
+      .article-header, .article-content-block, .article-related { padding: 0.5em;}
+      .article-image { height: 180px;}
+      .related-card { width: 100%; }
+      .related-img { height: 90px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">TRAVELHACKS</span>
+    <nav>
+      <div class="dropdown">
+        <button class="dropbtn"> &#x25BC;</button>
+        <div class="dropdown-content">
+          <a href="index.html">Home</a>
+          <a href="catalog.html">Catalog</a>
+          <a href="places.html">Places</a>
+          <a href="#media" id="media-link">Media</a>
+          <a href="#contact" id="contact-link">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <main>
+    <a href="catalog.html" class="article-back">&larr; Back to Catalog</a>
+    <div id="article-container">
+      <!-- Article content will be loaded here -->
+    </div>
+    <div class="article-footer-meta" id="article-footer-meta"></div>
+    <div class="article-related" id="related-articles" style="display:none;"></div>
+  </main>
+  <footer>
+    <div style="margin-bottom:0.8em;">
+      <a href="index.html">Home</a> |
+      <a href="catalog.html">Catalog</a> |
+      <a href="places.html">Places</a> |
+      <a href="#media">Media</a> |
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="margin-bottom:0.5em;">
+      <a href="https://twitter.com/" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://facebook.com/" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div>
+      &copy; 2025 TRAVELHACKS. All Rights Reserved.
+    </div>
+  </footer>
+  <script>
+    // Helper: get query param
+    function getQueryParam(name) {
+      const url = new URL(window.location.href);
+      return url.searchParams.get(name);
+    }
+
+    // Helper: format date
+    function formatDate(dateStr) {
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'});
+    }
+
+    // Helper: escape HTML (for excerpt, etc.)
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    // Render related articles
+    function renderRelated(currentArticle, allArticles) {
+      // Show up to 3 articles in the same category or with overlapping tags, but not itself
+      const related = allArticles
+        .filter(a => a.id !== currentArticle.id)
+        .map(a => ({
+          article: a,
+          score: (
+            (a.category === currentArticle.category ? 2 : 0) +
+            a.tags.filter(tag => currentArticle.tags.includes(tag)).length
+          )
+        }))
+        .filter(r => r.score > 0)
+        .sort((a,b) => b.score - a.score)
+        .slice(0,3)
+        .map(r => r.article);
+
+      if(related.length === 0) {
+        document.getElementById('related-articles').style.display = 'none';
+        return;
+      }
+
+      let html = `<div class="related-title">Related Articles</div><div class="related-list">`;
+      for(const a of related) {
+        html += `
+        <a class="related-card" href="article.html?id=${a.id}">
+          <img src="${a.image}" alt="${escapeHTML(a.title)}" class="related-img">
+          <div class="related-content">
+            <div class="related-title-link">${escapeHTML(a.title)}</div>
+            <div style="color:#789; font-size:0.9em;">${formatDate(a.date)}</div>
+          </div>
+        </a>
+        `;
+      }
+      html += `</div>`;
+      const relatedDiv = document.getElementById('related-articles');
+      relatedDiv.innerHTML = html;
+      relatedDiv.style.display = '';
+    }
+
+    // Main render
+    async function renderArticle() {
+      // Get article id from query param
+      const articleId = getQueryParam('id');
+      if(!articleId) {
+        document.getElementById('article-container').innerHTML = '<div class="article-content-block"><strong>Article not found.</strong></div>';
+        return;
+      }
+
+      // Load articles.json (should be available publicly on the server)
+      let articlesJson = [];
+      try {
+        const res = await fetch('articles.json');
+        articlesJson = await res.json();
+      } catch (e) {
+        document.getElementById('article-container').innerHTML = '<div class="article-content-block"><strong>Could not load article data.</strong></div>';
+        return;
+      }
+
+      const article = articlesJson.find(a => String(a.id) === String(articleId));
+      if(!article) {
+        document.getElementById('article-container').innerHTML = '<div class="article-content-block"><strong>Article not found.</strong></div>';
+        return;
+      }
+
+      // Set page title
+      document.getElementById('article-title-tab').textContent = article.title + " | TRAVELHACKS";
+
+      // Main content
+      let html = `
+        <div class="article-header">
+          <div class="article-title">${escapeHTML(article.title)}</div>
+          <div class="article-meta">
+            <div class="article-author">
+              <img src="${article.authorAvatar}" alt="${escapeHTML(article.author)}" class="author-avatar">
+              <span>${escapeHTML(article.author)}</span>
+            </div>
+            <span>•</span>
+            <span>${formatDate(article.date)}</span>
+            <span>•</span>
+            <span style="font-size:0.96em;">${escapeHTML(article.category ? article.category[0].toUpperCase() + article.category.slice(1) : '')}</span>
+          </div>
+          <div class="article-tags">
+            ${article.tags.map(tag => `<span class="article-tag">${escapeHTML(tag)}</span>`).join('')}
+          </div>
+          <img src="${article.image}" class="article-image" alt="${escapeHTML(article.title)}">
+        </div>
+        <div class="article-excerpt">${escapeHTML(article.excerpt)}</div>
+        <div class="article-content-block" id="article-content-block">
+          Loading article content...
+        </div>
+        <div class="article-share">
+          Share this article:
+          <div class="share-btns">
+            <button class="share-btn" onclick="window.open('https://twitter.com/intent/tweet?url='+encodeURIComponent(window.location.href)+'&text='+encodeURIComponent('${escapeHTML(article.title)}'), '_blank')">Twitter</button>
+            <button class="share-btn" onclick="window.open('https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(window.location.href), '_blank')">Facebook</button>
+            <button class="share-btn" onclick="navigator.clipboard.writeText(window.location.href);alert('Article link copied!')">Copy Link</button>
+          </div>
+        </div>
+      `;
+      document.getElementById('article-container').innerHTML = html;
+
+      // Render Markdown/HTML content
+      // If the article has "contentHtml", render as HTML. If it has "contentMarkdown", use a markdown converter.
+      function renderMarkdown(md) {
+        // Basic Markdown to HTML (for demo only: use a real library like marked.js for production)
+        return md
+          .replace(/^### (.*$)/gim, '<h3>$1</h3>')
+          .replace(/^## (.*$)/gim, '<h2>$1</h2>')
+          .replace(/^# (.*$)/gim, '<h1>$1</h1>')
+          .replace(/^\> (.*$)/gim, '<blockquote>$1</blockquote>')
+          .replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/gim, '<em>$1</em>')
+          .replace(/!\[(.*?)\]\((.*?)\)/gim, "<img alt='$1' src='$2' />")
+          .replace(/\[(.*?)\]\((.*?)\)/gim, "<a href='$2' target='_blank'>$1</a>")
+          .replace(/\n$/gim, '<br />');
+      }
+
+      if(article.contentHtml) {
+        document.getElementById('article-content-block').innerHTML = article.contentHtml;
+      } else if(article.contentMarkdown) {
+        document.getElementById('article-content-block').innerHTML = renderMarkdown(article.contentMarkdown);
+      } else {
+        document.getElementById('article-content-block').innerHTML = "<p>No article content available.</p>";
+      }
+
+      // Footer meta
+      document.getElementById('article-footer-meta').innerHTML = `
+        Last updated: ${formatDate(article.date)}
+        • Article ID: ${article.id}
+      `;
+
+      // Related articles
+      renderRelated(article, articlesJson);
+    }
+
+    // Load article on page load
+    document.addEventListener('DOMContentLoaded', renderArticle);
+  </script>
+</body>
+</html>

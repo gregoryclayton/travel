@@ -9,7 +9,7 @@
 <body>
     <nav>
         <div class="logo">
-            <a href="#">Travelhacks</a>
+            <a href="#">TravelSite</a>
         </div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li>
@@ -24,6 +24,37 @@
             <div class="line3"></div>
         </div>
     </nav>
+
+
+    <div class="slideshow-container">
+        <div class="slides">
+            <div class="slide"><img src="https://via.placeholder.com/800x400?text=Slide+1" alt="Slide 1"></div>
+            <div class="slide"><img src="https://via.placeholder.com/800x400?text=Slide+2" alt="Slide 2"></div>
+            <div class="slide"><img src="https://via.placeholder.com/800x400?text=Slide+3" alt="Slide 3"></div>
+        </div>
+        <button class="prev" onclick="moveSlide(-1)">&#10094;</button>
+        <button class="next" onclick="moveSlide(1)">&#10095;</button>
+    </div>
+
+    <div class="postbox1">
+        <div class="post"><img class="postimg" src="">post</div>
+    </div>
+
+    <div class="postbox2">
+        <div class="post"><img class="postimg" src="">post</div>
+    </div>
+
+    <div class="postbox3">
+        <div class="post"><img class="postimg" src="">post</div>
+    </div>
+
+    <div class="postlist">potlist</div>
+
+    <div class="placelist">palce lsit</div>
+
+    <div class="footer">footer links</div>
+
+
     <script>
         var burger = document.querySelector('.burger');
 var nav = document.querySelector('.nav-links');
@@ -36,5 +67,18 @@ burger.addEventListener('click', () => {
     };
 });
     </script>
+
+    
+<script>
+    let currentSlide = 0;
+
+    function moveSlide(n) {
+        const slides = document.querySelector('.slides');
+        const totalSlides = document.querySelectorAll('.slide').length;
+        currentSlide = (currentSlide + n + totalSlides) % totalSlides;
+        slides.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+</script>
+
 </body>
 </html>

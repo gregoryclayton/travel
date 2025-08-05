@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TRAVELHACKS | Article Catalog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { margin:0; font-family: 'Segoe UI', Arial, sans-serif; background:#f7f7fa; color:#222; }
+    header { background:#2b3a4b; color:#fff; padding:1.2em 1em; position:relative; height:50px;}
+    .logo { font-size:2em; font-weight:bold; letter-spacing:2px; }
+    nav { position:absolute; right:1em; top:1.5em; }
+    .dropdown { display:inline-block; position:relative; }
+    .dropbtn {
+      background:#2b3a4b; color:#fff;  font-size:1.2em;
+      border:none; cursor:pointer; border-radius:6px;
+    }
+    .dropdown-content {
+      display:none; position:absolute; background:#fff; min-width:140px;
+      box-shadow:0 4px 8px rgba(0,0,0,0.08); z-index:1;
+      border-radius:6px; right:0; margin-top:0.1em;
+    }
+    .dropdown-content a {
+      color:#2b3a4b; padding:0.8em 1.2em; text-decoration:none; display:block;
+      font-size:1em; border-bottom:1px solid #eee;
+    }
+    .dropdown-content a:last-child { border-bottom:none; }
+    .dropdown-content a:hover { background:#f9f9fb; }
+    .dropdown:hover .dropdown-content { display:block; }
+    main { max-width:1200px; margin:2em auto; padding:0 1em; }
+    
+    /* Page title */
+    .page-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5em;
+      padding-bottom: 0.8em;
+      border-bottom: 1px solid #e0e4e8;
+    }
+    
+    .page-title h1 {
+      font-size: 1.8em;
+      font-weight: 600;
+      color: #2b3a4b;
+      margin: 0;
+    }
+    
+    .page-description {
+      color: #789;
+      margin-top: 0.3em;
+      font-size: 0.95em;
+    }
+    
+    /* Filter controls */
+    .catalog-controls {
+      background: #fff;
+      border-radius: 10px;
+      padding: 1.2em 1.5em;
+      margin-bottom: 2em;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+    }
+    
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1em;
+      margin-bottom: 1em;
+    }
+    
+    .controls-row:last-child {
+      margin-bottom: 0;
+    }
+    
+    .control-group {
+      display: flex;
+      align-items: center;
+      gap: 0.8em;
+    }
+    
+    .control-label {
+      font-size: 0.9em;
+      color: #555;
+      font-weight: 500;
+    }
+    
+    .control-select {
+      padding: 0.5em 1em;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+      background: #f8f9fa;
+      font-size: 0.9em;
+      color: #444;
+      min-width: 120px;
+    }
+    
+    .search-box {
+      display: flex;
+      flex-grow: 1;
+      max-width: 400px;
+    }
+    
+    .search-input {
+      flex-grow: 1;
+      padding: 0.6em 1em;
+      border: 1px solid #ddd;
+      border-right: none;
+      border-radius: 6px 0 0 6px;
+      font-size: 0.95em;
+    }
+    
+    .search-button {
+      background: #2962ff;
+      color: white;
+      border: none;
+      padding: 0 1.2em;
+      border-radius: 0 6px 6px 0;
+      cursor: pointer;
+    }
+    
+    .filter-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5em;
+    }
+    
+    .tag {
+      background: #f0f2f5;
+      color: #444;
+      padding: 0.4em 0.8em;
+      border-radius: 20px;
+      font-size: 0.85em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .tag:hover, .tag.active {
+      background: #2962ff;
+      color: white;
+    }
+    
+    .results-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1em;
+      font-size: 0.9em;
+      color: #666;
+    }
+    
+    /* Catalog grid */
+    .catalog-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5em;
+      margin-bottom: 2em;
+    }
+    
+    .article-card {
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(44,62,80,0.06);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+      height: 100%;
+    }
+    
+    .article-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(44,62,80,0.12);
+    }
+    
+    .article-image {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+    
+    .article-content {
+      padding: 1.2em;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+    
+    .article-title {
+      font-size: 1.15em;
+      font-weight: 600;
+      margin: 0 0 0.5em 0;
+      color: #2b3a4b;
+    }
+    
+    .article-meta {
+      display: flex;
+      justify-content: space-between;
+      color: #789;
+      font-size: 0.85em;
+      margin-bottom: 0.8em;
+    }
+    
+    .article-author {
+      display: flex;
+      align-items: center;
+      gap: 0.4em;
+    }
+    
+    .author-avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #eee;
+    }
+    
+    .article-excerpt {
+      color: #555;
+      font-size: 0.95em;
+      margin-bottom: 1em;
+      flex-grow: 1;
+    }
+    
+    .article-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4em;
+      margin-bottom: 0.8em;
+    }
+    
+    .article-tag {
+      background: #f0f2f5;
+      color: #555;
+      padding: 0.3em 0.6em;
+      border-radius: 4px;
+      font-size: 0.8em;
+    }
+    
+    .article-link {
+      color: #2962ff;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95em;
+      margin-top: auto;
+      align-self: flex-start;
+    }
+    
+    /* Pagination */
+    .pagination {
+      display: flex;
+      justify-content: center;
+      margin: 2em 0;
+      gap: 0.5em;
+    }
+    
+    .page-button {
+      background: white;
+      border: 1px solid #ddd;
+      color: #444;
+      min-width: 40px;
+      height: 40px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .page-button:hover {
+      background: #f8f9fa;
+    }
+    
+    .page-button.active {
+      background: #2962ff;
+      color: white;
+      border-color: #2962ff;
+    }
+    
+    .page-button.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    /* Newsletter */
+    .newsletter {
+      background: #2b3a4b;
+      color: white;
+      padding: 2em;
+      border-radius: 10px;
+      margin: 3em 0;
+      text-align: center;
+    }
+    
+    .newsletter h2 {
+      margin-top: 0;
+      font-size: 1.5em;
+    }
+    
+    .newsletter p {
+      margin-bottom: 1.5em;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .newsletter-form {
+      display: flex;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+    
+    .newsletter-email {
+      flex-grow: 1;
+      padding: 0.8em 1em;
+      border: none;
+      border-radius: 6px 0 0 6px;
+      font-size: 1em;
+    }
+    
+    .newsletter-submit {
+      background: #2962ff;
+      color: white;
+      border: none;
+      padding: 0 1.5em;
+      border-radius: 0 6px 6px 0;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    
+    .newsletter-submit:hover {
+      background: #1e4fcc;
+    }
+    
+    /* Footer */
+    footer {
+      margin-top:2.5em; background:#2b3a4b; color:#fff; text-align:center; padding:1.5em 0 1em 0;
+      font-size:0.93em; border-radius:12px 12px 0 0;
+    }
+    footer a { color:#fff; margin:0 10px; text-decoration:underline;}
+    
+    /* Responsive */
+    @media (max-width: 768px) {
+      .controls-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .search-box {
+        max-width: 100%;
+        width: 100%;
+      }
+      
+      .control-group {
+        width: 100%;
+        justify-content: space-between;
+      }
+      
+      .catalog-grid {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      }
+    }
+    
+    @media (max-width:600px) {
+      header { text-align:center; }
+      nav { position:static; display:block; margin-top:1em; }
+      
+      .page-title {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      
+      .catalog-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">TRAVELHACKS</span>
+    <nav>
+      <div class="dropdown">
+        <button class="dropbtn"> &#x25BC;</button>
+        <div class="dropdown-content" id="dropdown-menu">
+          <a href="index.html">Home</a>
+          <a href="catalog.html">Catalog</a>
+          <a href="#places" id="places-link">Places</a>
+          <a href="#media" id="media-link">Media</a>
+          <a href="#contact" id="contact-link">Contact</a>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <div class="page-title">
+      <div>
+        <h1>Travel Article Catalog</h1>
+        <p class="page-description">Browse our collection of travel guides, tips, and stories from around the world</p>
+      </div>
+      <div id="current-user">
+        <span>Logged in as: gregoryclayton</span>
+        <span> • </span>
+        <span>2025-08-05</span>
+      </div>
+    </div>
+    
+    <div class="catalog-controls">
+      <div class="controls-row">
+        <div class="search-box">
+          <input type="text" class="search-input" placeholder="Search articles...">
+          <button class="search-button">🔍</button>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Sort by:</label>
+          <select class="control-select" id="sort-select">
+            <option value="newest">Newest First</option>
+            <option value="oldest">Oldest First</option>
+            <option value="popular">Most Popular</option>
+            <option value="az">A-Z</option>
+          </select>
+        </div>
+        <div class="control-group">
+          <label class="control-label">Category:</label>
+          <select class="control-select" id="category-select">
+            <option value="all">All Categories</option>
+            <option value="guides">Travel Guides</option>
+            <option value="tips">Travel Tips</option>
+            <option value="stories">Stories</option>
+            <option value="photography">Photography</option>
+          </select>
+        </div>
+      </div>
+      <div class="controls-row">
+        <div class="control-group">
+          <label class="control-label">Filter by tags:</label>
+          <div class="filter-tags">
+            <span class="tag active">All</span>
+            <span class="tag">Europe</span>
+            <span class="tag">Asia</span>
+            <span class="tag">Americas</span>
+            <span class="tag">Africa</span>
+            <span class="tag">Oceania</span>
+            <span class="tag">Budget</span>
+            <span class="tag">Luxury</span>
+            <span class="tag">Adventure</span>
+            <span class="tag">Food</span>
+            <span class="tag">Culture</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="results-info">
+      <div>Showing <strong>48</strong> of <strong>86</strong> articles</div>
+      <div>Page <strong>1</strong> of <strong>4</strong></div>
+    </div>
+    
+    <div class="catalog-grid" id="article-grid">
+      <!-- Articles will be dynamically inserted here -->
+    </div>
+    
+    <div class="pagination">
+      <button class="page-button disabled">«</button>
+      <button class="page-button active">1</button>
+      <button class="page-button">2</button>
+      <button class="page-button">3</button>
+      <button class="page-button">4</button>
+      <button class="page-button">»</button>
+    </div>
+    
+    <div class="newsletter">
+      <h2>Subscribe to Our Newsletter</h2>
+      <p>Get the latest travel tips and destination guides delivered straight to your inbox. No spam, just the good stuff.</p>
+      <form class="newsletter-form">
+        <input type="email" placeholder="Your email address" class="newsletter-email" required>
+        <button type="submit" class="newsletter-submit">Subscribe</button>
+      </form>
+    </div>
+  </main>
+  
+  <footer>
+    <div style="margin-bottom:0.8em;">
+      <a href="index.html">Home</a> |
+      <a href="catalog.html">Catalog</a> |
+      <a href="#places">Places</a> |
+      <a href="#media">Media</a> |
+      <a href="#contact">Contact</a>
+    </div>
+    <div style="margin-bottom:0.5em;">
+      <a href="https://twitter.com/" target="_blank" rel="noopener">Twitter</a>
+      <a href="https://instagram.com/" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://facebook.com/" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://github.com/" target="_blank" rel="noopener">GitHub</a>
+    </div>
+    <div>
+      &copy; 2025 TRAVELHACKS. All Rights Reserved.
+    </div>
+  </footer>
+  
+  <script>
+    // Sample article data (in a real application, this would come from a server)
+    const articles = [
+      {
+        id: 1,
+        title: "Exploring the Amalfi Coast",
+        date: "2025-06-01",
+        author: "Maria Romano",
+        authorAvatar: "https://randomuser.me/api/portraits/women/65.jpg",
+        excerpt: "Sunshine, cliffs, and lemon groves: see how the Amalfi Coast stole our hearts.",
+        image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Europe", "Italy", "Scenic", "Culture"],
+        link: "article1.html"
+      },
+      {
+        id: 2,
+        title: "Tokyo Nights and Neon Lights",
+        date: "2025-05-19",
+        author: "Kenji Tanaka",
+        authorAvatar: "https://randomuser.me/api/portraits/men/42.jpg",
+        excerpt: "A whirlwind journey through Tokyo's dazzling cityscape and hidden gems.",
+        image: "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=500&q=80",
+        category: "stories",
+        tags: ["Asia", "Japan", "Urban", "Food"],
+        link: "article2.html"
+      },
+      {
+        id: 3,
+        title: "Hiking the Patagonian Wilderness",
+        date: "2025-04-22",
+        author: "Carlos Mendez",
+        authorAvatar: "https://randomuser.me/api/portraits/men/22.jpg",
+        excerpt: "Wind, glaciers, and wild beauty. Patagonia at its most breathtaking.",
+        image: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=500&q=80",
+        category: "stories",
+        tags: ["Americas", "Argentina", "Chile", "Adventure"],
+        link: "article3.html"
+      },
+      {
+        id: 4,
+        title: "A Weekend in Prague",
+        date: "2025-03-15",
+        author: "Eva Novak",
+        authorAvatar: "https://randomuser.me/api/portraits/women/28.jpg",
+        excerpt: "Cobblestone streets, gothic spires, and the best pastries in Central Europe.",
+        image: "https://images.unsplash.com/photo-1519677100203-a0e668c92439?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Europe", "Czech Republic", "Budget", "Culture"],
+        link: "article4.html"
+      },
+      {
+        id: 5,
+        title: "Sailing the Greek Isles",
+        date: "2025-02-10",
+        author: "Nikos Papadopoulos",
+        authorAvatar: "https://randomuser.me/api/portraits/men/79.jpg",
+        excerpt: "Azure seas and whitewashed villages in a timeless Mediterranean dream.",
+        image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?auto=format&fit=crop&w=500&q=80",
+        category: "stories",
+        tags: ["Europe", "Greece", "Luxury", "Scenic"],
+        link: "article5.html"
+      },
+      {
+        id: 6,
+        title: "Canadian Rockies Roadtrip",
+        date: "2024-12-28",
+        author: "Sarah Johnson",
+        authorAvatar: "https://randomuser.me/api/portraits/women/33.jpg",
+        excerpt: "Snow-capped peaks, turquoise lakes, and endless adventure.",
+        image: "https://images.unsplash.com/photo-1513889961551-628c1e5e2ee9?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Americas", "Canada", "Adventure", "Scenic"],
+        link: "article6.html"
+      },
+      {
+        id: 7,
+        title: "Bali Beyond the Beaches",
+        date: "2024-11-09",
+        author: "Wayan Sukarta",
+        authorAvatar: "https://randomuser.me/api/portraits/men/55.jpg",
+        excerpt: "Rice terraces, temples, and the island's secret green heart.",
+        image: "https://images.unsplash.com/photo-1573790387438-4da905039392?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Asia", "Indonesia", "Culture", "Budget"],
+        link: "article7.html"
+      },
+      {
+        id: 8,
+        title: "Safari Adventures in Tanzania",
+        date: "2024-10-15",
+        author: "Daniel Kimathi",
+        authorAvatar: "https://randomuser.me/api/portraits/men/61.jpg",
+        excerpt: "Tracking the Big Five across the Serengeti's golden plains.",
+        image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=500&q=80",
+        category: "stories",
+        tags: ["Africa", "Tanzania", "Adventure", "Wildlife"],
+        link: "article8.html"
+      },
+      {
+        id: 9,
+        title: "15 Essential Travel Photography Tips",
+        date: "2024-09-21",
+        author: "Emma Chen",
+        authorAvatar: "https://randomuser.me/api/portraits/women/52.jpg",
+        excerpt: "Capture memorable travel moments with these professional photography techniques.",
+        image: "https://images.unsplash.com/photo-1452421822248-d4c2b47f0c81?auto=format&fit=crop&w=500&q=80",
+        category: "tips",
+        tags: ["Photography", "Tips", "Equipment", "Techniques"],
+        link: "article9.html"
+      },
+      {
+        id: 10,
+        title: "Hidden Gems of Portugal",
+        date: "2024-08-04",
+        author: "Miguel Sousa",
+        authorAvatar: "https://randomuser.me/api/portraits/men/14.jpg",
+        excerpt: "Beyond Lisbon and Porto: discovering Portugal's lesser-known treasures.",
+        image: "https://images.unsplash.com/photo-1548707309-dcebeab9ea9b?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Europe", "Portugal", "Budget", "Culture"],
+        link: "article10.html"
+      },
+      {
+        id: 11,
+        title: "New Zealand: North vs South Island",
+        date: "2024-07-12",
+        author: "Olivia Williams",
+        authorAvatar: "https://randomuser.me/api/portraits/women/12.jpg",
+        excerpt: "Which island offers the best experience for your New Zealand adventure?",
+        image: "https://images.unsplash.com/photo-1469554466046-39a71aa772a7?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Oceania", "New Zealand", "Adventure", "Scenic"],
+        link: "article11.html"
+      },
+      {
+        id: 12,
+        title: "A Food Tour of Mexico City",
+        date: "2024-06-08",
+        author: "Javier Rodriguez",
+        authorAvatar: "https://randomuser.me/api/portraits/men/26.jpg",
+        excerpt: "From street tacos to fine dining: exploring Mexico City's culinary landscape.",
+        image: "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Americas", "Mexico", "Food", "Culture"],
+        link: "article12.html"
+      },
+      {
+        id: 13,
+        title: "10 Budget Travel Hacks That Actually Work",
+        date: "2024-05-17",
+        author: "Alex Thompson",
+        authorAvatar: "https://randomuser.me/api/portraits/women/4.jpg",
+        excerpt: "Proven strategies to stretch your travel budget without sacrificing experiences.",
+        image: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?auto=format&fit=crop&w=500&q=80",
+        category: "tips",
+        tags: ["Budget", "Tips", "Planning", "Accommodation"],
+        link: "article13.html"
+      },
+      {
+        id: 14,
+        title: "Winter in the Swiss Alps",
+        date: "2024-04-22",
+        author: "Sophie Müller",
+        authorAvatar: "https://randomuser.me/api/portraits/women/59.jpg",
+        excerpt: "Skiing, snowboarding, and alpine charm in Switzerland's winter wonderland.",
+        image: "https://images.unsplash.com/photo-1491555103944-7c647fd857e6?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Europe", "Switzerland", "Winter", "Adventure"],
+        link: "article14.html"
+      },
+      {
+        id: 15,
+        title: "The Ultimate Vietnam Itinerary",
+        date: "2024-03-15",
+        author: "Linh Nguyen",
+        authorAvatar: "https://randomuser.me/api/portraits/women/89.jpg",
+        excerpt: "From Hanoi to Ho Chi Minh City: the perfect two-week journey through Vietnam.",
+        image: "https://images.unsplash.com/photo-1528127269322-539801943592?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Asia", "Vietnam", "Budget", "Culture"],
+        link: "article15.html"
+      },
+      {
+        id: 16,
+        title: "How to Take Better Travel Videos",
+        date: "2024-02-08",
+        author: "Ryan Parker",
+        authorAvatar: "https://randomuser.me/api/portraits/men/32.jpg",
+        excerpt: "Create cinematic travel memories with these video shooting and editing tips.",
+        image: "https://images.unsplash.com/photo-1527011046414-4781f1f94f8c?auto=format&fit=crop&w=500&q=80",
+        category: "photography",
+        tags: ["Photography", "Video", "Equipment", "Editing"],
+        link: "article16.html"
+      },
+      {
+        id: 17,
+        title: "Digital Nomad Guide: Bali Edition",
+        date: "2024-01-19",
+        author: "Jessica Lee",
+        authorAvatar: "https://randomuser.me/api/portraits/women/72.jpg",
+        excerpt: "Everything you need to know about working remotely from the Island of Gods.",
+        image: "https://images.unsplash.com/photo-1586611292717-f828b167408c?auto=format&fit=crop&w=500&q=80",
+        category: "tips",
+        tags: ["Asia", "Indonesia", "Digital Nomad", "Work"],
+        link: "article17.html"
+      },
+      {
+        id: 18,
+        title: "The Magic of Morocco",
+        date: "2023-12-12",
+        author: "Omar Benali",
+        authorAvatar: "https://randomuser.me/api/portraits/men/36.jpg",
+        excerpt: "Medinas, mountains, and Moroccan hospitality: a journey through North Africa's gem.",
+        image: "https://images.unsplash.com/photo-1539020140719-ff770e7a2172?auto=format&fit=crop&w=500&q=80",
+        category: "stories",
+        tags: ["Africa", "Morocco", "Culture", "Photography"],
+        link: "article18.html"
+      },
+      {
+        id: 19,
+        title: "Summer in Santorini",
+        date: "2023-11-05",
+        author: "Elena Papadakis",
+        authorAvatar: "https://randomuser.me/api/portraits/women/18.jpg",
+        excerpt: "White-washed buildings, blue domes, and spectacular sunsets in the Aegean Sea.",
+        image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Europe", "Greece", "Summer", "Luxury"],
+        link: "article19.html"
+      },
+      {
+        id: 20,
+        title: "The Ultimate Guide to Travel Insurance",
+        date: "2023-10-08",
+        author: "Michael Watson",
+        authorAvatar: "https://randomuser.me/api/portraits/men/82.jpg",
+        excerpt: "Everything you need to know about protecting yourself and your trip investments.",
+        image: "https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?auto=format&fit=crop&w=500&q=80",
+        category: "tips",
+        tags: ["Insurance", "Planning", "Safety", "Budget"],
+        link: "article20.html"
+      },
+      {
+        id: 21,
+        title: "Hiking the Inca Trail to Machu Picchu",
+        date: "2023-09-14",
+        author: "Isabella Martinez",
+        authorAvatar: "https://randomuser.me/api/portraits/women/37.jpg",
+        excerpt: "A step-by-step guide to this bucket-list trek through the ancient Inca Empire.",
+        image: "https://images.unsplash.com/photo-1587595431973-160d0d94add1?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Americas", "Peru", "Adventure", "Hiking"],
+        link: "article21.html"
+      },
+      {
+        id: 22,
+        title: "Iceland's Ring Road Adventure",
+        date: "2023-08-22",
+        author: "Thorin Gunnarsson",
+        authorAvatar: "https://randomuser.me/api/portraits/men/67.jpg",
+        excerpt: "Waterfalls, volcanoes, and black sand beaches on the ultimate Icelandic road trip.",
+        image: "https://images.unsplash.com/photo-1476610182048-b716b8518aae?auto=format&fit=crop&w=500&q=80",
+        category: "stories",
+        tags: ["Europe", "Iceland", "Road Trip", "Adventure"],
+        link: "article22.html"
+      },
+      {
+        id: 23,
+        title: "The Art of Packing Light",
+        date: "2023-07-10",
+        author: "Sophie Bennett",
+        authorAvatar: "https://randomuser.me/api/portraits/women/22.jpg",
+        excerpt: "Master the minimalist approach to travel with these essential packing techniques.",
+        image: "https://images.unsplash.com/photo-1553531384-397c80973a0b?auto=format&fit=crop&w=500&q=80",
+        category: "tips",
+        tags: ["Packing", "Minimalism", "Tips", "Organization"],
+        link: "article23.html"
+      },
+      {
+        id: 24,
+        title: "24 Hours in Barcelona",
+        date: "2023-06-18",
+        author: "Pablo Morales",
+        authorAvatar: "https://randomuser.me/api/portraits/men/19.jpg",
+        excerpt: "Make the most of a short visit to Catalonia's vibrant cultural capital.",
+        image: "https://images.unsplash.com/photo-1583422409516-2895a77efded?auto=format&fit=crop&w=500&q=80",
+        category: "guides",
+        tags: ["Europe", "Spain", "Urban", "Architecture"],
+        link: "article24.html"
+      }
+    ];
+    
+    // Function to create article cards
+    function createArticleCard(article) {
+      // Format the date
+      const date = new Date(article.date);
+      const formattedDate = date.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+      
+      // Create tag elements
+      const tagElements = article.tags.map(tag => 
+        `<span class="article-tag">${tag}</span>`
+      ).join('');
+      
+      // Create article card HTML
+      const card = document.createElement('div');
+      card.className = 'article-card';
+      card.innerHTML = `
+        <img src="${article.image}" alt="${article.title}" class="article-image">
+        <div class="article-content">
+          <h2 class="article-title">${article.title}</h2>
+          <div class="article-meta">
+            <div class="article-author">
+              <img src="${article.authorAvatar}" alt="${article.author}" class="author-avatar">
+              <span>${article.author}</span>
+            </div>
+            <div class="article-date">${formattedDate}</div>
+          </div>
+          <p class="article-excerpt">${article.excerpt}</p>
+          <div class="article-tags">
+            ${tagElements}
+          </div>
+          <a href="${article.link}" class="article-link">Read Article →</a>
+        </div>
+      `;
+      
+      return card;
+    }
+    
+    // Populate the article grid
+    function populateArticleGrid(articleList) {
+      const grid = document.getElementById('article-grid');
+      grid.innerHTML = '';
+      
+      articleList.forEach(article => {
+        const card = createArticleCard(article);
+        grid.appendChild(card);
+      });
+    }
+    
+    // Initial population of articles
+    populateArticleGrid(articles);
+    
+    // Handle tag filtering
+    document.querySelectorAll('.filter-tags .tag').forEach(tag => {
+      tag.addEventListener('click', function() {
+        // Remove active class from all tags
+        document.querySelectorAll('.filter-tags .tag').forEach(t => {
+          t.classList.remove('active');
+        });
+        
+        // Add active class to clicked tag
+        this.classList.add('active');
+        
+        // Get selected tag
+        const selectedTag = this.textContent;
+        
+        let filteredArticles;
+        if (selectedTag === 'All') {
+          filteredArticles = articles;
+        } else {
+          filteredArticles = articles.filter(article => 
+            article.tags.includes(selectedTag)
+          );
+        }
+        
+        // Update the grid with filtered articles
+        populateArticleGrid(filteredArticles);
+        
+        // Update results info
+        document.querySelector('.results-info div:first-child').innerHTML = 
+          `Showing <strong>${filteredArticles.length}</strong> of <strong>${articles.length}</strong> articles`;
+      });
+    });
+    
+    // Handle category filtering
+    document.getElementById('category-select').addEventListener('change', function() {
+      const selectedCategory = this.value;
+      
+      let filteredArticles;
+      if (selectedCategory === 'all') {
+        filteredArticles = articles;
+      } else {
+        filteredArticles = articles.filter(article => 
+          article.category === selectedCategory
+        );
+      }
+      
+      // Update the grid with filtered articles
+      populateArticleGrid(filteredArticles);
+      
+      // Update results info
+      document.querySelector('.results-info div:first-child').innerHTML = 
+        `Showing <strong>${filteredArticles.length}</strong> of <strong>${articles.length}</strong> articles`;
+    });
+    
+    // Handle sorting
+    document.getElementById('sort-select').addEventListener('change', function() {
+      const sortMethod = this.value;
+      
+      let sortedArticles = [...articles]; // Create a copy
+      
+      switch(sortMethod) {
+        case 'newest':
+          sortedArticles.sort((a, b) => new Date(b.date) - new Date(a.date));
+          break;
+        case 'oldest':
+          sortedArticles.sort((a, b) => new Date(a.date) - new Date(b.date));
+          break;
+        case 'az':
+          sortedArticles.sort((a, b) => a.title.localeCompare(b.title));
+          break;
+        case 'popular':
+          // This would normally be based on view counts or ratings
+          // For this example, we'll just use a random order
+          sortedArticles.sort(() => Math.random() - 0.5);
+          break;
+      }
+      
+      // Update the grid with sorted articles
+      populateArticleGrid(sortedArticles);
+    });
+    
+    // Search functionality
+    const searchInput = document.querySelector('.search-input');
+    const searchButton = document.querySelector('.search-button');
+    
+    function performSearch() {
+      const searchTerm = searchInput.value.toLowerCase();
+      
+      if (searchTerm.trim() === '') {
+        populateArticleGrid(articles);
+        return;
+      }
+      
+      const searchResults = articles.filter(article => 
+        article.title.toLowerCase().includes(searchTerm) || 
+        article.excerpt.toLowerCase().includes(searchTerm) || 
+        article.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+      );
+      
+      populateArticleGrid(searchResults);
+      
+      // Update results info
+      document.querySelector('.results-info div:first-child').innerHTML = 
+        `Showing <strong>${searchResults.length}</strong> of <strong>${articles.length}</strong> articles`;
+    }
+    
+    searchButton.addEventListener('click', performSearch);
+    searchInput.addEventListener('keyup', function(event) {
+      if (event.key === 'Enter') {
+        performSearch();
+      }
+    });
+    
+    // Newsletter form handler
+    document.querySelector('.newsletter-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const emailInput = document.querySelector('.newsletter-email');
+      
+      if (emailInput.value) {
+        alert(`Thank you for subscribing with ${emailInput.value}! You'll receive our next newsletter soon.`);
+        emailInput.value = '';
+      }
+    });
+    
+    // Pagination handling (simplified for demo)
+    document.querySelectorAll('.pagination .page-button').forEach(button => {
+      if (!button.classList.contains('disabled')) {
+        button.addEventListener('click', function() {
+          // Remove active class from all buttons
+          document.querySelectorAll('.pagination .page-button').forEach(btn => {
+            btn.classList.remove('active');
+          });
+          
+          // Add active class to clicked button (if it's a number)
+          if (!this.textContent.includes('«') && !this.textContent.includes('»')) {
+            this.classList.add('active');
+          }
+          
+          // In a real application, this would load the next page of results
+          // For this demo, we'll just scroll to the top of the results
+          document.querySelector('.catalog-controls').scrollIntoView({behavior: 'smooth'});
+        });
+      }
+    });
+  </script>
+</body>
+</html>
